@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>elyx - Current Plan</title>
+    <link rel="stylesheet" href="current-plan.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <i class="fas fa-heartbeat"></i>
+                <span>elyx</span>
+            </div>
+            <div class="user-info">
+                <div class="user-details">
+                    <span class="welcome-text">Welcome, Member</span>
+                    <span class="user-email" id="userEmail"></span>
+                </div>
+                <button class="logout-btn" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                </button>
+            </div>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="nav-breadcrumb">
+            <a href="member-dashboard.html" class="breadcrumb-link">
+                <i class="fas fa-arrow-left"></i>
+                Back to Dashboard
+            </a>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="plan-header">
+                <h1>Current Workout Plan</h1>
+                <p>Your personalized fitness journey with daily breakdown</p>
+            </div>
+
+            <!-- Doctor controls (shown only for doctor editing a member plan) -->
+            <div class="plan-controls" id="planControls" style="display: none;">
+                <button class="btn secondary" id="editPlanBtn"><i class="fas fa-edit"></i> Edit Plan</button>
+                <button class="btn primary" id="savePlanBtn" style="display:none;"><i class="fas fa-save"></i> Save</button>
+                <button class="btn secondary" id="cancelPlanBtn" style="display:none;"><i class="fas fa-times"></i> Cancel</button>
+            </div>
+
+            <!-- Plan Content -->
+            <div class="plan-content">
+                <!-- Goals Section -->
+                <div class="plan-section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-bullseye"></i> Goals</h2>
+                    </div>
+                    <div class="goals-list">
+                        <div class="goal-item">
+                            <i class="fas fa-dumbbell"></i>
+                            <span>Establish consistent workout habit.</span>
+                        </div>
+                        <div class="goal-item">
+                            <i class="fas fa-heartbeat"></i>
+                            <span>Begin gentle cardiovascular conditioning (Zone 2).</span>
+                        </div>
+                        <div class="goal-item">
+                            <i class="fas fa-walking"></i>
+                            <span>Build mobility to offset travel stiffness.</span>
+                        </div>
+                        <div class="goal-item">
+                            <i class="fas fa-chart-line"></i>
+                            <span>Track baseline metrics (resting HR, HRV, weight, sleep quality).</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Daily Breakdown Section -->
+                <div class="plan-section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-calendar-week"></i> Daily Breakdown</h2>
+                    </div>
+                    
+                    <!-- Monday -->
+                    <div class="day-card">
+                        <div class="day-header">
+                            <h3><i class="fas fa-dumbbell"></i> Monday – Strength & Core (Gym, 60 min)</h3>
+                        </div>
+                        <div class="workout-details">
+                            <div class="workout-phase">
+                                <h4>Warm-up: 5 min treadmill walk @ brisk pace.</h4>
+                            </div>
+                            <div class="workout-phase">
+                                <h4>Circuit (3 rounds, 10–12 reps each, 60 sec rest between rounds):</h4>
+                                <ul>
+                                    <li>Goblet Squat (dumbbell or kettlebell)</li>
+                                    <li>Push-ups (knee or full)</li>
+                                    <li>Seated Row (machine or resistance band)</li>
+                                    <li>Glute Bridge</li>
+                                    <li>Plank – 45 sec hold</li>
+                                </ul>
+                            </div>
+                            <div class="workout-phase">
+                                <h4>Cool-down: 5 min full-body stretch.</h4>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tuesday -->
+                    <div class="day-card">
+                        <div class="day-header">
+                            <h3><i class="fas fa-running"></i> Tuesday – Zone 2 Cardio (Outdoor or Treadmill, 30 min)</h3>
+                        </div>
+                        <div class="workout-details">
+                            <div class="workout-phase">
+                                <h4>Maintain HR at 60–70% of max (Garmin monitor).</h4>
+                            </div>
+                            <div class="workout-phase">
+                                <h4>Brisk walk or light jog — can be done during travel.</h4>
+                            </div>
+                            <div class="workout-phase">
+                                <h4>Post-cardio: 5 min hip flexor & hamstring stretch.</h4>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Wednesday -->
+                    <div class="day-card">
+                        <div class="day-header">
+                            <h3><i class="fas fa-plane"></i> Wednesday – Mobility & Strength (Travel-Friendly, 45 min)</h3>
+                        </div>
+                        <div class="workout-details">
+                            <div class="workout-phase">
+                                <h4>Dynamic warm-up: arm circles, leg swings, torso twists.</h4>
+                            </div>
+                            <div class="workout-phase">
+                                <h4>Bodyweight circuit (4 rounds, 45 sec work, 15 sec rest):</h4>
+                                <ul>
+                                    <li>Air Squats</li>
+                                    <li>Incline Push-ups (hotel desk/bench)</li>
+                                    <li>Reverse Lunges</li>
+                                    <li>Superman Hold</li>
+                                    <li>Side Plank – 30 sec/side</li>
+                                </ul>
+                            </div>
+                            <div class="workout-phase">
+                                <h4>Finish with 10 min mobility flow (cat-cow, child's pose, spinal twist).</h4>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Thursday -->
+                    <div class="day-card">
+                        <div class="day-header">
+                            <h3><i class="fas fa-fire"></i> Thursday – Zone 2 Cardio + Short Intervals (35 min)</h3>
+                        </div>
+                        <div class="workout-details">
+                            <div class="workout-phase">
+                                <h4>20 min steady pace walk/jog (HR 60–70% max).</h4>
+                            </div>
+                            <div class="workout-phase">
+                                <h4>Then 5 rounds:</h4>
+                                <ul>
+                                    <li>1 min faster pace run/walk</li>
+                                    <li>1 min easy walk</li>
+                                </ul>
+                            </div>
+                            <div class="workout-phase">
+                                <h4>Cool-down: 5 min light walking.</h4>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Friday -->
+                    <div class="day-card">
+                        <div class="day-header">
+                            <h3><i class="fas fa-dumbbell"></i> Friday – Strength & Core (Gym, 60 min)</h3>
+                        </div>
+                        <div class="workout-details">
+                            <div class="workout-phase">
+                                <h4>Warm-up: 5 min rowing machine or brisk walk.</h4>
+                            </div>
+                            <div class="workout-phase">
+                                <h4>Circuit (3 rounds, 8–10 reps, moderate weight):</h4>
+                                <ul>
+                                    <li>Dumbbell Deadlift</li>
+                                    <li>Overhead Press</li>
+                                    <li>Step-ups (bench or sturdy box)</li>
+                                    <li>Lat Pulldown (machine)</li>
+                                    <li>Side Plank Hip Lifts – 12 reps/side</li>
+                                </ul>
+                            </div>
+                            <div class="workout-phase">
+                                <h4>Stretch: hamstrings, chest, shoulders.</h4>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Saturday -->
+                    <div class="day-card">
+                        <div class="day-header">
+                            <h3><i class="fas fa-bicycle"></i> Saturday – Light Cardio & Recovery (30 min)</h3>
+                        </div>
+                        <div class="workout-details">
+                            <div class="workout-phase">
+                                <h4>20 min casual cycling, swimming, or brisk walk.</h4>
+                            </div>
+                            <div class="workout-phase">
+                                <h4>10 min full-body stretching / foam rolling.</h4>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sunday -->
+                    <div class="day-card rest-day">
+                        <div class="day-header">
+                            <h3><i class="fas fa-bed"></i> Sunday – Full Rest</h3>
+                        </div>
+                        <div class="workout-details">
+                            <div class="workout-phase">
+                                <h4>Optional: 15 min easy walk after meals.</h4>
+                            </div>
+                            <div class="workout-phase">
+                                <h4>Prioritize sleep and hydration.</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lifestyle & Tracking Section -->
+                <div class="plan-section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-chart-bar"></i> Lifestyle & Tracking for Week 1</h2>
+                    </div>
+                    
+                    <div class="lifestyle-grid">
+                        <div class="lifestyle-card">
+                            <h4><i class="fas fa-moon"></i> Sleep</h4>
+                            <p>Target 7–8 hrs, consistent bedtime/wake time.</p>
+                        </div>
+                        
+                        <div class="lifestyle-card">
+                            <h4><i class="fas fa-tint"></i> Hydration</h4>
+                            <p>2.5–3 L/day (more on travel days).</p>
+                        </div>
+                        
+                        <div class="lifestyle-card">
+                            <h4><i class="fas fa-apple-alt"></i> Nutrition</h4>
+                            <ul>
+                                <li>Protein at every meal (eggs, chicken, fish, lentils).</li>
+                                <li>Add 2 servings of Omega-3 rich food/week.</li>
+                                <li>Avoid heavy dinners < 3 hrs before bed.</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="lifestyle-card">
+                            <h4><i class="fas fa-chart-line"></i> Tracking</h4>
+                            <ul>
+                                <li>Record daily steps, HR, HRV via Garmin.</li>
+                                <li>Note energy levels & sleep quality (subjective score 1–10).</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>elyx</h4>
+                    <p>Empowering better healthcare through technology</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="member-dashboard.html">Dashboard</a></li>
+                        <li><a href="#services">Services</a></li>
+                        <li><a href="#about">About Us</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="#help">Help Center</a></li>
+                        <li><a href="#privacy">Privacy Policy</a></li>
+                        <li><a href="#terms">Terms of Service</a></li>
+                        <li><a href="#faq">FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact Info</h4>
+                    <p><i class="fas fa-phone"></i> mobile number</p>
+                    <p><i class="fas fa-envelope"></i> email id</p>
+                    <p><i class="fas fa-map-marker-alt"></i> address</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 elyx. All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="data-manager.js"></script>
+    <script src="current-plan.js"></script>
+</body>
+</html>

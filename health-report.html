@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>elyx - Health Report</title>
+  <link rel="stylesheet" href="health-report.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <div class="logo">
+        <i class="fas fa-heartbeat"></i>
+        <span>elyx</span>
+      </div>
+      <div class="header-actions">
+        <button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+      </div>
+    </header>
+
+    <main class="main-content">
+      <div class="page-header">
+        <h1><i class="fas fa-file-medical"></i> Health Report</h1>
+        <p id="modeNote">Create or update your weekly health report</p>
+      </div>
+
+      <form id="reportForm" class="report-form">
+        <div class="row two">
+          <div>
+            <label>Resting Heart Rate (bpm)</label>
+            <input type="number" id="restingHr" min="0" placeholder="e.g. 62" />
+          </div>
+          <div>
+            <label>HRV (ms)</label>
+            <input type="number" id="hrv" min="0" placeholder="e.g. 65" />
+          </div>
+        </div>
+
+        <div class="row two">
+          <div>
+            <label>Weight (kg)</label>
+            <input type="number" id="weight" min="0" step="0.1" placeholder="e.g. 74.2" />
+          </div>
+          <div>
+            <label>Sleep Quality (1-10)</label>
+            <input type="number" id="sleep" min="1" max="10" placeholder="e.g. 8" />
+          </div>
+        </div>
+
+        <div class="row">
+          <label>Notes</label>
+          <textarea id="notes" rows="4" placeholder="Any symptoms, improvements, travel, etc..."></textarea>
+        </div>
+
+        <div class="actions">
+          <button type="button" class="btn secondary" onclick="goBack()">Back</button>
+          <button type="submit" class="btn primary" id="saveBtn">Save Report</button>
+        </div>
+      </form>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-bottom">
+        <p>&copy; 2024 elyx. All rights reserved.</p>
+      </div>
+    </footer>
+  </div>
+
+  <script src="health-report.js"></script>
+</body>
+</html>

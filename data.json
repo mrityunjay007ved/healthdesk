@@ -1,0 +1,112 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "email": "member@example.com",
+      "password": "password123",
+      "userType": "member",
+      "name": "John Doe",
+      "createdAt": "2024-08-15T11:00:00.000Z",
+      "lastLogin": "2024-08-15T11:00:00.000Z"
+    },
+    {
+      "id": 2,
+      "email": "doctor@example.com",
+      "password": "doctor123",
+      "userType": "doctor",
+      "name": "Dr. Jane Smith",
+      "createdAt": "2024-08-15T11:00:00.000Z",
+      "lastLogin": "2024-08-15T11:00:00.000Z"
+    },
+    {
+      "id": 3,
+      "email": "alice@example.com",
+      "password": "alice123",
+      "userType": "member",
+      "name": "Alice Johnson",
+      "createdAt": "2024-08-15T11:00:00.000Z",
+      "lastLogin": "2024-08-15T11:00:00.000Z"
+    },
+    {
+      "id": 4,
+      "email": "michael@example.com",
+      "password": "michael123",
+      "userType": "member",
+      "name": "Michael Smith",
+      "createdAt": "2024-08-15T11:00:00.000Z",
+      "lastLogin": "2024-08-15T11:00:00.000Z"
+    },
+    {
+      "id": 5,
+      "email": "priya@example.com",
+      "password": "priya123",
+      "userType": "member",
+      "name": "Priya Patel",
+      "createdAt": "2024-08-15T11:00:00.000Z",
+      "lastLogin": "2024-08-15T11:00:00.000Z"
+    },
+    {
+      "id": 6,
+      "email": "wei@example.com",
+      "password": "wei123",
+      "userType": "member",
+      "name": "Wei Chen",
+      "createdAt": "2024-08-15T11:00:00.000Z",
+      "lastLogin": "2024-08-15T11:00:00.000Z"
+    }
+  ],
+  "loginHistory": [
+    {
+      "id": 1,
+      "email": "member@example.com",
+      "userType": "member",
+      "loginTime": "2024-08-15T11:00:00.000Z",
+      "success": true,
+      "ipAddress": "127.0.0.1"
+    }
+  ],
+  "conversations": [
+    {
+      "id": "conv_1",
+      "participantIds": [1, 2],
+      "participantEmails": ["member@example.com", "doctor@example.com"],
+      "participantNames": ["John Doe", "Dr. Jane Smith"],
+      "createdAt": "2024-08-15T12:00:00.000Z",
+      "lastMessageAt": "2024-08-15T12:30:00.000Z",
+      "unreadCount": {
+        "1": 0,
+        "2": 1
+      }
+    }
+  ],
+  "messages": [
+    {
+      "id": "msg_1",
+      "conversationId": "conv_1",
+      "senderId": 1,
+      "senderEmail": "member@example.com",
+      "senderName": "John Doe",
+      "senderType": "member",
+      "content": "Hello Dr. Smith, I wanted to ask about my recent blood pressure readings. They seem a bit high lately.",
+      "timestamp": "2024-08-15T12:30:00.000Z",
+      "readBy": [1],
+      "messageType": "text",
+      "metadata": {
+        "context": "health_inquiry",
+        "priority": "normal",
+        "tags": ["blood_pressure", "health_metrics"]
+      }
+    }
+  ],
+  "settings": {
+    "maxLoginAttempts": 5,
+    "sessionTimeout": 3600,
+    "requirePasswordChange": false,
+    "messaging": {
+      "maxMessageLength": 2000,
+      "allowFileAttachments": true,
+      "enableRealTimeNotifications": true,
+      "messageRetentionDays": 365
+    }
+  }
+}

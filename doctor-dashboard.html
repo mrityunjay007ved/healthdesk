@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>elyx - Doctor Dashboard</title>
+    <link rel="stylesheet" href="doctor-dashboard.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <i class="fas fa-heartbeat"></i>
+                <span>elyx</span>
+            </div>
+            <div class="header-actions">
+                <div class="doctor-info">
+                    <div class="doctor-name" id="doctorName">Doctor</div>
+                    <div class="doctor-email" id="doctorEmail"></div>
+                </div>
+                <button class="profile-btn" id="openProfile" title="Edit profile">
+                    <i class="fas fa-user-md"></i>
+                </button>
+                <button class="logout-btn" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="dashboard-header">
+                <h1>Doctor Dashboard</h1>
+                <p>Manage your patients and update your profile</p>
+            </div>
+
+            <!-- Chat Section -->
+            <section class="chat-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-comments"></i> Patient Messages</h2>
+                    <div class="tools">
+                        <div class="unread-counter" id="unreadCounter">0</div>
+                        <button class="toggle-chat-btn" id="toggleChatBtn" title="Toggle chat">
+                            <i class="fas fa-comment-dots"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="chat-container" id="chatContainer">
+                    <div class="conversations-list" id="conversationsList">
+                        <div class="conversations-header">
+                            <h3>Recent Conversations</h3>
+                            <div class="conversation-search">
+                                <input type="text" id="conversationSearch" placeholder="Search conversations...">
+                                <i class="fas fa-search"></i>
+                            </div>
+                        </div>
+                        <div class="conversations-content" id="conversationsContent">
+                            <!-- Filled by JS -->
+                        </div>
+                    </div>
+
+                    <div class="chat-window" id="chatWindow">
+                        <div class="chat-header" id="chatHeader">
+                            <div class="chat-patient-info">
+                                <div class="patient-avatar">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div class="patient-details">
+                                    <div class="patient-name" id="chatPatientName">Select a conversation</div>
+                                    <div class="patient-status" id="chatPatientStatus">-</div>
+                                </div>
+                            </div>
+                            <div class="chat-actions">
+                                <button class="chat-action-btn" id="chatSearchBtn" title="Search messages">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                                <button class="chat-action-btn" id="chatExportBtn" title="Export conversation">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                                <button class="chat-action-btn" id="closeChatBtn" title="Close chat">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="chat-messages" id="chatMessages">
+                            <div class="chat-welcome">
+                                <i class="fas fa-comments"></i>
+                                <h3>Welcome to Patient Messaging</h3>
+                                <p>Select a conversation to start messaging with your patients</p>
+                            </div>
+                        </div>
+
+                        <div class="chat-input-container" id="chatInputContainer">
+                            <div class="chat-input-wrapper">
+                                <textarea 
+                                    id="messageInput" 
+                                    placeholder="Type your message here..." 
+                                    rows="2"
+                                    maxlength="2000"
+                                ></textarea>
+                                <div class="chat-input-actions">
+                                    <div class="message-tools">
+                                        <button class="tool-btn" id="addTagBtn" title="Add medical tags">
+                                            <i class="fas fa-tags"></i>
+                                        </button>
+                                        <button class="tool-btn" id="markUrgentBtn" title="Mark as urgent">
+                                            <i class="fas fa-exclamation-triangle"></i>
+                                        </button>
+                                    </div>
+                                    <button class="send-btn" id="sendMessageBtn" disabled>
+                                        <i class="fas fa-paper-plane"></i>
+                                        Send
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="message-status" id="messageStatus"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="patients-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-users"></i> Patients</h2>
+                    <div class="tools">
+                        <input class="search" id="patientSearch" type="text" placeholder="Search patients by name...">
+                    </div>
+                </div>
+
+                <div class="patients-list" id="patientsList">
+                    <!-- Filled by JS -->
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-bottom">
+                <p>&copy; 2024 elyx. All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Profile Panel -->
+    <div class="drawer" id="profileDrawer">
+        <div class="drawer-header">
+            <h3><i class="fas fa-user-cog"></i> Profile</h3>
+            <button class="close-drawer" id="closeProfile"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="drawer-body">
+            <form id="doctorProfileForm" class="profile-form">
+                <div class="form-row">
+                    <label>Name</label>
+                    <input type="text" id="docName" placeholder="Enter your full name" required>
+                </div>
+                <div class="form-row two">
+                    <div>
+                        <label>Date of Birth</label>
+                        <input type="date" id="docDob">
+                    </div>
+                    <div>
+                        <label>Age</label>
+                        <input type="number" id="docAge" min="0" placeholder="Age">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <label>Gender</label>
+                    <select id="docGender">
+                        <option value="">Select</option>
+                        <option>Male</option>
+                        <option>Female</option>
+                        <option>Non-binary</option>
+                        <option>Other</option>
+                        <option>Prefer not to say</option>
+                    </select>
+                </div>
+                <div class="form-row">
+                    <label>Profile (About)</label>
+                    <textarea id="docAbout" rows="4" placeholder="Short professional bio..."></textarea>
+                </div>
+                <div class="drawer-actions">
+                    <button type="button" class="btn secondary" id="cancelProfile">Cancel</button>
+                    <button type="submit" class="btn primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="drawer-backdrop" id="drawerBackdrop"></div>
+
+    <!-- Patient Actions Modal -->
+    <div class="modal" id="patientModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="patientModalTitle">Patient</h3>
+                <button class="modal-close" id="closePatientModal"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="patient-actions">
+                    <button class="action" data-action="plan"><i class="fas fa-clipboard-list"></i> Member Current Plan</button>
+                    <button class="action" data-action="query"><i class="fas fa-question-circle"></i> Member Current Query</button>
+                    <button class="action" data-action="report"><i class="fas fa-file-medical"></i> Member Health Report</button>
+                    <button class="action" data-action="chat"><i class="fas fa-comments"></i> Start Conversation</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Message Search Modal -->
+    <div class="modal" id="messageSearchModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Search Messages</h3>
+                <button class="modal-close" id="closeMessageSearchModal"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="search-form">
+                    <div class="form-row">
+                        <input type="text" id="searchQuery" placeholder="Search messages..." autocomplete="off">
+                        <button class="search-btn" id="performSearch">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="search-results" id="searchResults">
+                    <!-- Search results will be populated here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Message Tags Modal -->
+    <div class="modal" id="messageTagsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add Medical Tags</h3>
+                <button class="modal-close" id="closeMessageTagsModal"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="tags-form">
+                    <div class="form-row">
+                        <label>Select Medical Context:</label>
+                        <select id="messageContext">
+                            <option value="general">General Inquiry</option>
+                            <option value="health_inquiry">Health Inquiry</option>
+                            <option value="medication_change">Medication Change</option>
+                            <option value="symptom_report">Symptom Report</option>
+                            <option value="follow_up">Follow-up</option>
+                            <option value="emergency">Emergency</option>
+                            <option value="appointment">Appointment</option>
+                            <option value="test_results">Test Results</option>
+                        </select>
+                    </div>
+                    <div class="form-row">
+                        <label>Priority Level:</label>
+                        <select id="messagePriority">
+                            <option value="low">Low</option>
+                            <option value="normal" selected>Normal</option>
+                            <option value="high">High</option>
+                            <option value="urgent">Urgent</option>
+                        </select>
+                    </div>
+                    <div class="form-row">
+                        <label>Medical Tags:</label>
+                        <div class="tag-inputs">
+                            <input type="text" id="customTags" placeholder="Enter tags separated by commas (e.g., blood_pressure, medication, symptoms)">
+                        </div>
+                        <div class="preset-tags">
+                            <div class="tag-category">
+                                <strong>Common Tags:</strong>
+                                <span class="preset-tag" data-tag="blood_pressure">Blood Pressure</span>
+                                <span class="preset-tag" data-tag="medication">Medication</span>
+                                <span class="preset-tag" data-tag="symptoms">Symptoms</span>
+                                <span class="preset-tag" data-tag="pain">Pain</span>
+                                <span class="preset-tag" data-tag="diet">Diet</span>
+                                <span class="preset-tag" data-tag="exercise">Exercise</span>
+                                <span class="preset-tag" data-tag="sleep">Sleep</span>
+                                <span class="preset-tag" data-tag="mental_health">Mental Health</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button class="btn secondary" id="cancelTags">Cancel</button>
+                        <button class="btn primary" id="applyTags">Apply Tags</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="data-manager.js"></script>
+    <script src="doctor-dashboard.js"></script>
+</body>
+</html>

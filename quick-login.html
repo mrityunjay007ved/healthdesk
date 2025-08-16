@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚀 Quick Login - elyx</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            max-width: 600px; 
+            margin: 0 auto; 
+            padding: 20px; 
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .login-container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+        }
+        h1 { 
+            color: #333; 
+            margin-bottom: 30px;
+            font-size: 2.2rem;
+        }
+        .logo {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+        .quick-login-btn { 
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white; 
+            border: none; 
+            padding: 15px 30px; 
+            border-radius: 12px; 
+            cursor: pointer; 
+            margin: 10px; 
+            font-size: 1.1rem;
+            font-weight: 600;
+            display: block;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+        .quick-login-btn:hover { 
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+        .doctor-btn {
+            background: linear-gradient(135deg, #e74c3c, #f39c12);
+        }
+        .doctor-btn:hover {
+            box-shadow: 0 10px 20px rgba(231, 76, 60, 0.3);
+        }
+        .status { 
+            padding: 15px; 
+            margin: 20px 0; 
+            border-radius: 10px; 
+            font-weight: 500;
+        }
+        .success { 
+            background: #d4edda; 
+            color: #155724; 
+            border: 1px solid #c3e6cb;
+        }
+        .info { 
+            background: #d1ecf1; 
+            color: #0c5460; 
+            border: 1px solid #bee5eb;
+        }
+        .current-user {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-size: 1.1rem;
+        }
+        .logout-btn {
+            background: #6c757d;
+            font-size: 0.9rem;
+            padding: 8px 16px;
+            margin-top: 10px;
+        }
+        .dashboard-links {
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 1px solid #eee;
+        }
+        .dashboard-link {
+            display: inline-block;
+            margin: 0 10px;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 16px;
+            border: 1px solid #667eea;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        .dashboard-link:hover {
+            background: #667eea;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="logo">🏥</div>
+        <h1>elyx Quick Login</h1>
+        
+        <div id="currentUserStatus" class="current-user" style="display: none;">
+            <div class="user-info">
+                <span id="userIcon">👤</span>
+                <span id="userName">Not logged in</span>
+            </div>
+            <button class="quick-login-btn logout-btn" onclick="logout()">Logout</button>
+        </div>
+        
+        <div id="loginButtons">
+            <button class="quick-login-btn" onclick="loginAsMember()">
+                🏃‍♂️ Login as Member (John Doe)
+            </button>
+            
+            <button class="quick-login-btn doctor-btn" onclick="loginAsDoctor()">
+                👩‍⚕️ Login as Doctor (Dr. Jane Smith)
+            </button>
+        </div>
+        
+        <div id="status" class="status info">
+            Choose a login option above to test the chat system
+        </div>
+        
+        <div class="dashboard-links">
+            <a href="member-dashboard.html" class="dashboard-link">Member Dashboard</a>
+            <a href="doctor-dashboard.html" class="dashboard-link">Doctor Dashboard</a>
+            <a href="diagnostic.html" class="dashboard-link">System Diagnostic</a>
+        </div>
+    </div>
+
+    <script>
+        function updateStatus(message, type = 'info') {
+            const statusEl = document.getElementById('status');
+            statusEl.textContent = message;
+            statusEl.className = `status ${type}`;
+        }
+
+        function updateCurrentUser() {
+            const user = JSON.parse(localStorage.getItem('currentUser') || 'null');
+            const statusEl = document.getElementById('currentUserStatus');
+            const userNameEl = document.getElementById('userName');
+            const userIconEl = document.getElementById('userIcon');
+            const loginButtonsEl = document.getElementById('loginButtons');
+            
+            if (user) {
+                statusEl.style.display = 'block';
+                loginButtonsEl.style.display = 'none';
+                userNameEl.textContent = `${user.name} (${user.userType})`;
+                userIconEl.textContent = user.userType === 'doctor' ? '👩‍⚕️' : '🏃‍♂️';
+                updateStatus(`✅ Logged in as ${user.name}`, 'success');
+            } else {
+                statusEl.style.display = 'none';
+                loginButtonsEl.style.display = 'block';
+                updateStatus('Choose a login option above to test the chat system', 'info');
+            }
+        }
+
+        function loginAsMember() {
+            const member = {
+                id: 1,
+                email: 'member@example.com',
+                userType: 'member',
+                name: 'John Doe'
+            };
+            
+            localStorage.setItem('currentUser', JSON.stringify(member));
+            sessionStorage.setItem('currentUser', JSON.stringify(member));
+            
+            updateStatus('✅ Successfully logged in as John Doe (Member)', 'success');
+            updateCurrentUser();
+            
+            setTimeout(() => {
+                window.location.href = 'member-dashboard.html';
+            }, 1500);
+        }
+
+        function loginAsDoctor() {
+            const doctor = {
+                id: 2,
+                email: 'doctor@example.com',
+                userType: 'doctor',
+                name: 'Dr. Jane Smith'
+            };
+            
+            localStorage.setItem('currentUser', JSON.stringify(doctor));
+            sessionStorage.setItem('currentUser', JSON.stringify(doctor));
+            
+            updateStatus('✅ Successfully logged in as Dr. Jane Smith (Doctor)', 'success');
+            updateCurrentUser();
+            
+            setTimeout(() => {
+                window.location.href = 'doctor-dashboard.html';
+            }, 1500);
+        }
+
+        function logout() {
+            localStorage.removeItem('currentUser');
+            sessionStorage.removeItem('currentUser');
+            
+            updateStatus('🔓 Logged out successfully', 'info');
+            updateCurrentUser();
+        }
+
+        // Check current login status on page load
+        window.addEventListener('load', function() {
+            updateCurrentUser();
+        });
+    </script>
+</body>
+</html>

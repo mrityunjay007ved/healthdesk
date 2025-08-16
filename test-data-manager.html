@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Manager Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .status { padding: 15px; margin: 10px 0; border-radius: 8px; }
+        .loading { background: #d1ecf1; border-left: 4px solid #17a2b8; }
+        .success { background: #d4edda; border-left: 4px solid #28a745; }
+        .error { background: #f8d7da; border-left: 4px solid #dc3545; }
+        .test-section { background: #f8f9fa; padding: 15px; margin: 15px 0; border-radius: 8px; }
+        .btn { background: #667eea; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; margin: 5px; }
+        #log { background: #f8f9fa; border: 1px solid #dee2e6; padding: 15px; border-radius: 5px; height: 200px; overflow-y: auto; font-family: monospace; font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Data Manager Loading Test</h1>
+    
+    <div id="status" class="status loading">
+        <strong>Status:</strong> <span id="statusText">Initializing...</span>
+    </div>
+    
+    <div class="test-section">
+        <h3>Test Results:</h3>
+        <div id="results">
+            <div>✅ Data Manager Created: <span id="dmCreated">❌</span></div>
+            <div>✅ Data Loaded: <span id="dataLoaded">❌</span></div>
+            <div>✅ Users Available: <span id="usersAvailable">❌</span></div>
+            <div>✅ Chat Functions Ready: <span id="chatReady">❌</span></div>
+        </div>
+    </div>
+    
+    <div class="test-section">
+        <h3>Manual Tests:</h3>
+        <button class="btn" onclick="testLoadData()">Test Load Data</button>
+        <button class="btn" onclick="testCreateConversation()">Test Create Conversation</button>
+        <button class="btn" onclick="testSendMessage()">Test Send Message</button>
+        <button class="btn" onclick="clearLog()">Clear Log</button>
+    </div>
+    
+    <div class="test-section">
+        <h3>Console Log:</h3>
+        <div id="log"></div>
+    </div>
+
+    <script src="data-manager.js"></script>
+    <script>
+        function updateStatus(text, type = 'loading') {
+            const statusEl = document.getElementById('status');
+            const statusText = document.getElementById('statusText');
+            statusText.textContent = text;
+            statusEl.className = `status ${type}`;
+        }
+
+        function updateResult(id, success) {
+            const el = document.getElementById(id);
+            el.textContent = success ? '✅' : '❌';
+            el.style.color = success ? 'green' : 'red';
+        }
+
+        function log(message, type = 'info') {
+            const logEl = document.getElementById('log');
+            const timestamp = new Date().toLocaleTimeString();
+            const prefix = type === 'error' ? '❌' : type === 'success' ? '✅' : 'ℹ️';
+            logEl.innerHTML += `[${timestamp}] ${prefix} ${message}<br>`;
+            logEl.scrollTop = logEl.scrollHeight;
+        }
+
+        function clearLog() {
+            document.getElementById('log').innerHTML = '';
+        }
+
+        // Test data manager creation
+        function checkDataManagerCreated() {
+            const exists = !!window.dataManager;
+            updateResult('dmCreated', exists);
+            log(`Data Manager exists: ${exists}`, exists ? 'success' : 'error');
+            return exists;
+        }
+
+        // Test data loading
+        async function testLoadData() {
+            log('Testing data loading...');
+            try {
+                await window.dataManager.loadData();
+                const hasData = !!window.dataManager.data;
+                const hasUsers = hasData && Array.isArray(window.dataManager.data.users);
+                
+                updateResult('dataLoaded', hasData);
+                updateResult('usersAvailable', hasUsers);
+                
+                log(`Data loaded: ${hasData}`, hasData ? 'success' : 'error');
+                log(`Users count: ${hasUsers ? window.dataManager.data.users.length : 0}`, hasUsers ? 'success' : 'error');
+                
+                return hasData && hasUsers;
+            } catch (error) {
+                log(`Error loading data: ${error.message}`, 'error');
+                return false;
+            }
+        }
+
+        // Test conversation creation
+        async function testCreateConversation() {
+            log('Testing conversation creation...');
+            try {
+                if (!window.dataManager.isLoaded) {
+                    await window.dataManager.loadData();
+                }
+                
+                const conversation = await window.dataManager.getOrCreateConversation(1, 2);
+                log(`Conversation created: ${conversation.id}`, 'success');
+                return true;
+            } catch (error) {
+                log(`Error creating conversation: ${error.message}`, 'error');
+                return false;
+            }
+        }
+
+        // Test message sending
+        async function testSendMessage() {
+            log('Testing message sending...');
+            try {
+                if (!window.dataManager.isLoaded) {
+                    await window.dataManager.loadData();
+                }
+                
+                // First create a conversation
+                const conversation = await window.dataManager.getOrCreateConversation(1, 2);
+                
+                // Then send a message
+                const message = await window.dataManager.sendMessage(
+                    1, 
+                    conversation.id, 
+                    'Test message from data manager test', 
+                    'text',
+                    { context: 'test', priority: 'normal' }
+                );
+                
+                log(`Message sent: ${message.id}`, 'success');
+                return true;
+            } catch (error) {
+                log(`Error sending message: ${error.message}`, 'error');
+                return false;
+            }
+        }
+
+        // Initialize tests
+        async function runInitialTests() {
+            updateStatus('Checking data manager...', 'loading');
+            
+            // Check if data manager was created
+            const dmExists = checkDataManagerCreated();
+            if (!dmExists) {
+                updateStatus('Data manager not found!', 'error');
+                return;
+            }
+            
+            updateStatus('Loading data...', 'loading');
+            
+            // Test data loading
+            const dataLoaded = await testLoadData();
+            if (!dataLoaded) {
+                updateStatus('Failed to load data!', 'error');
+                return;
+            }
+            
+            updateStatus('Testing chat functions...', 'loading');
+            
+            // Test chat functions
+            const chatReady = await testCreateConversation();
+            updateResult('chatReady', chatReady);
+            
+            if (chatReady) {
+                updateStatus('All tests passed! Data manager ready.', 'success');
+            } else {
+                updateStatus('Some tests failed.', 'error');
+            }
+        }
+
+        // Wait for data manager ready event
+        window.addEventListener('dataManagerReady', () => {
+            log('Data manager ready event received!', 'success');
+        });
+
+        // Run tests when page loads
+        window.addEventListener('load', () => {
+            log('Page loaded, starting tests...');
+            setTimeout(runInitialTests, 1000);
+        });
+    </script>
+</body>
+</html>

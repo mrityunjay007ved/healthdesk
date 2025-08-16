@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>elyx - Member Profile</title>
+    <link rel="stylesheet" href="profile.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <i class="fas fa-heartbeat"></i>
+                <span>elyx</span>
+            </div>
+            <div class="user-info">
+                <div class="user-details">
+                    <span class="welcome-text">Welcome, Member</span>
+                    <span class="user-email" id="userEmail"></span>
+                </div>
+                <button class="logout-btn" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                </button>
+            </div>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="nav-breadcrumb">
+            <a href="member-dashboard.html" class="breadcrumb-link">
+                <i class="fas fa-arrow-left"></i>
+                Back to Dashboard
+            </a>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="profile-header">
+                <h1>Member Profile</h1>
+                <p>Your personal information and preferences</p>
+            </div>
+
+            <!-- Profile Content -->
+            <div class="profile-content">
+                <!-- Member Snapshot Section -->
+                <div class="profile-section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-user-circle"></i> Member Snapshot</h2>
+                        <button class="edit-btn" onclick="toggleEditMode()">
+                            <i class="fas fa-edit"></i>
+                            Edit Profile
+                        </button>
+                    </div>
+
+                    <div class="snapshot-grid">
+                        <!-- Personal Information -->
+                        <div class="info-card">
+                            <div class="info-item">
+                                <label>Preferred Name:</label>
+                                <span id="preferredName" class="info-value">John Doe</span>
+                                <input type="text" id="preferredNameInput" class="edit-input" style="display: none;" value="John Doe">
+                            </div>
+                            
+                            <div class="info-item">
+                                <label>Date of Birth:</label>
+                                <span id="dateOfBirth" class="info-value">January 15, 1990</span>
+                                <input type="date" id="dateOfBirthInput" class="edit-input" style="display: none;" value="1990-01-15">
+                            </div>
+                            
+                            <div class="info-item">
+                                <label>Age:</label>
+                                <span id="age" class="info-value">34 years</span>
+                            </div>
+                            
+                            <div class="info-item">
+                                <label>Gender Identity:</label>
+                                <span id="genderIdentity" class="info-value">Male</span>
+                                <select id="genderIdentityInput" class="edit-input" style="display: none;">
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Non-binary">Non-binary</option>
+                                    <option value="Other">Other</option>
+                                    <option value="Prefer not to say">Prefer not to say</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Location Information -->
+                        <div class="info-card">
+                            <div class="info-item">
+                                <label>Primary Residence:</label>
+                                <span id="primaryResidence" class="info-value">New York, NY</span>
+                                <input type="text" id="primaryResidenceInput" class="edit-input" style="display: none;" value="New York, NY">
+                            </div>
+                            
+                            <div class="info-item">
+                                <label>Frequent Travel Hubs:</label>
+                                <span id="travelHubs" class="info-value">Los Angeles, CA; Chicago, IL; Miami, FL</span>
+                                <textarea id="travelHubsInput" class="edit-input" style="display: none;" rows="3">Los Angeles, CA; Chicago, IL; Miami, FL</textarea>
+                            </div>
+                        </div>
+
+                        <!-- Professional Information -->
+                        <div class="info-card">
+                            <div class="info-item">
+                                <label>Occupation / Business Commitments:</label>
+                                <span id="occupation" class="info-value">Software Engineer at Tech Corp</span>
+                                <input type="text" id="occupationInput" class="edit-input" style="display: none;" value="Software Engineer at Tech Corp">
+                            </div>
+                            
+                            <div class="info-item">
+                                <label>Personal Assistant:</label>
+                                <span id="personalAssistant" class="info-value">Sarah Johnson (sarah.j@email.com)</span>
+                                <input type="text" id="personalAssistantInput" class="edit-input" style="display: none;" value="Sarah Johnson (sarah.j@email.com)">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Edit Actions -->
+                    <div class="edit-actions" style="display: none;">
+                        <button class="save-btn" onclick="saveProfile()">
+                            <i class="fas fa-save"></i>
+                            Save Changes
+                        </button>
+                        <button class="cancel-btn" onclick="cancelEdit()">
+                            <i class="fas fa-times"></i>
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Additional Profile Sections (for future expansion) -->
+                <div class="profile-section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-heartbeat"></i> Health Information</h2>
+                    </div>
+                    <div class="placeholder-content">
+                        <p>Health information and medical history will be displayed here.</p>
+                        <button class="coming-soon-btn">Coming Soon</button>
+                    </div>
+                </div>
+
+                <div class="profile-section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-cog"></i> Preferences</h2>
+                    </div>
+                    <div class="placeholder-content">
+                        <p>Communication preferences and settings will be displayed here.</p>
+                        <button class="coming-soon-btn">Coming Soon</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>elyx</h4>
+                    <p>Empowering better healthcare through technology</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="member-dashboard.html">Dashboard</a></li>
+                        <li><a href="#services">Services</a></li>
+                        <li><a href="#about">About Us</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="#help">Help Center</a></li>
+                        <li><a href="#privacy">Privacy Policy</a></li>
+                        <li><a href="#terms">Terms of Service</a></li>
+                        <li><a href="#faq">FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact Info</h4>
+                    <p><i class="fas fa-phone"></i> mobile number</p>
+                    <p><i class="fas fa-envelope"></i> email id</p>
+                    <p><i class="fas fa-map-marker-alt"></i> address</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 elyx. All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="data-manager.js"></script>
+    <script src="profile.js"></script>
+</body>
+</html>

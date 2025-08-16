@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>elyx - Admin Panel</title>
+    <link rel="stylesheet" href="admin-panel.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <i class="fas fa-heartbeat"></i>
+                <span>elyx - Admin Panel</span>
+            </div>
+            <div class="user-info">
+                <span class="welcome-text">Welcome, Admin</span>
+                <button class="logout-btn" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="dashboard-header">
+                <h1>Data Management Dashboard</h1>
+                <p>Manage users, view login history, and monitor system statistics</p>
+            </div>
+
+            <!-- Statistics Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="totalUsers">0</h3>
+                        <p>Total Users</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="memberUsers">0</h3>
+                        <p>Member Users</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-user-md"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="doctorUsers">0</h3>
+                        <p>Doctor Users</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-sign-in-alt"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="totalLogins">0</h3>
+                        <p>Total Logins</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Data Sections -->
+            <div class="data-sections">
+                <!-- Users Section -->
+                <div class="data-section">
+                    <div class="section-header">
+                        <h2>User Management</h2>
+                        <button class="add-btn" onclick="showAddUserModal()">
+                            <i class="fas fa-plus"></i>
+                            Add User
+                        </button>
+                    </div>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>User Type</th>
+                                    <th>Created</th>
+                                    <th>Last Login</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usersTableBody">
+                                <!-- Users will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Login History Section -->
+                <div class="data-section">
+                    <div class="section-header">
+                        <h2>Login History</h2>
+                        <button class="refresh-btn" onclick="refreshData()">
+                            <i class="fas fa-sync-alt"></i>
+                            Refresh
+                        </button>
+                    </div>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Email</th>
+                                    <th>User Type</th>
+                                    <th>Login Time</th>
+                                    <th>Status</th>
+                                    <th>IP Address</th>
+                                </tr>
+                            </thead>
+                            <tbody id="loginHistoryTableBody">
+                                <!-- Login history will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Data Export Section -->
+                <div class="data-section">
+                    <div class="section-header">
+                        <h2>Data Export/Import</h2>
+                    </div>
+                    <div class="export-import-container">
+                        <div class="export-section">
+                            <h3>Export Data</h3>
+                            <p>Download all data as JSON file</p>
+                            <button class="export-btn" onclick="exportData()">
+                                <i class="fas fa-download"></i>
+                                Export JSON
+                            </button>
+                        </div>
+                        <div class="import-section">
+                            <h3>Import Data</h3>
+                            <p>Upload JSON file to import data</p>
+                            <input type="file" id="importFile" accept=".json" style="display: none;" onchange="importData(event)">
+                            <button class="import-btn" onclick="document.getElementById('importFile').click()">
+                                <i class="fas fa-upload"></i>
+                                Import JSON
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Add User Modal -->
+        <div id="addUserModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeAddUserModal()">&times;</span>
+                <div class="modal-header">
+                    <h2>Add New User</h2>
+                </div>
+                <form id="addUserForm" class="modal-form">
+                    <div class="form-group">
+                        <label for="userName">Name</label>
+                        <input type="text" id="userName" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="userEmail">Email</label>
+                        <input type="email" id="userEmail" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="userPassword">Password</label>
+                        <input type="password" id="userPassword" name="password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="userType">User Type</label>
+                        <select id="userType" name="userType" required>
+                            <option value="">Select User Type</option>
+                            <option value="member">Member</option>
+                            <option value="doctor">Doctor</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="submit-btn">
+                        <i class="fas fa-plus"></i>
+                        Add User
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="data-manager.js"></script>
+    <script src="admin-panel.js"></script>
+</body>
+</html>

@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>elyx - Weekly Review</title>
+    <link rel="stylesheet" href="weekly-review.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <i class="fas fa-heartbeat"></i>
+                <span>elyx</span>
+            </div>
+            <div class="user-info">
+                <div class="user-details">
+                    <span class="welcome-text">Welcome, Member</span>
+                    <span class="user-email" id="userEmail"></span>
+                </div>
+                <button class="logout-btn" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                </button>
+            </div>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="nav-breadcrumb">
+            <a href="member-dashboard.html" class="breadcrumb-link">
+                <i class="fas fa-arrow-left"></i>
+                Back to Dashboard
+            </a>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="review-header">
+                <h1>Weekly Progress Review</h1>
+                <p>Track your workout completion and add comments for this week</p>
+            </div>
+
+            <!-- Review Content -->
+            <div class="review-content">
+                <!-- Week Summary -->
+                <div class="review-section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-chart-pie"></i> Week Summary</h2>
+                        <div class="week-selector">
+                            <label for="weekSelect">Select Week:</label>
+                            <select id="weekSelect" onchange="loadWeekData()">
+                                <option value="current">Current Week</option>
+                                <option value="previous">Previous Week</option>
+                                <option value="two-weeks-ago">Two Weeks Ago</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="summary-stats">
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-dumbbell"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 id="completedWorkouts">0</h3>
+                                <p>Workouts Completed</p>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-percentage"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 id="completionRate">0%</h3>
+                                <p>Completion Rate</p>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-fire"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 id="totalMinutes">0</h3>
+                                <p>Total Minutes</p>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 id="weeklyScore">0</h3>
+                                <p>Weekly Score</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Daily Progress Tracking -->
+                <div class="review-section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-calendar-check"></i> Daily Progress Tracking</h2>
+                        <button class="save-btn" onclick="saveWeeklyProgress()">
+                            <i class="fas fa-save"></i>
+                            Save Progress
+                        </button>
+                    </div>
+                    
+                    <div class="progress-grid">
+                        <!-- Monday -->
+                        <div class="day-progress-card">
+                            <div class="day-header">
+                                <h3><i class="fas fa-dumbbell"></i> Monday</h3>
+                                <span class="day-type">Strength & Core</span>
+                            </div>
+                            <div class="progress-content">
+                                <div class="completion-status">
+                                    <label class="checkbox-container">
+                                        <input type="checkbox" id="monday-complete" onchange="updateProgress()">
+                                        <span class="checkmark"></span>
+                                        Completed
+                                    </label>
+                                </div>
+                                <div class="comment-section">
+                                    <label for="monday-comment">Comments:</label>
+                                    <textarea id="monday-comment" placeholder="How did your Monday workout go? Any challenges or achievements?"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tuesday -->
+                        <div class="day-progress-card">
+                            <div class="day-header">
+                                <h3><i class="fas fa-running"></i> Tuesday</h3>
+                                <span class="day-type">Zone 2 Cardio</span>
+                            </div>
+                            <div class="progress-content">
+                                <div class="completion-status">
+                                    <label class="checkbox-container">
+                                        <input type="checkbox" id="tuesday-complete" onchange="updateProgress()">
+                                        <span class="checkmark"></span>
+                                        Completed
+                                    </label>
+                                </div>
+                                <div class="comment-section">
+                                    <label for="tuesday-comment">Comments:</label>
+                                    <textarea id="tuesday-comment" placeholder="How was your cardio session? Did you maintain Zone 2 heart rate?"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Wednesday -->
+                        <div class="day-progress-card">
+                            <div class="day-header">
+                                <h3><i class="fas fa-plane"></i> Wednesday</h3>
+                                <span class="day-type">Mobility & Strength</span>
+                            </div>
+                            <div class="progress-content">
+                                <div class="completion-status">
+                                    <label class="checkbox-container">
+                                        <input type="checkbox" id="wednesday-complete" onchange="updateProgress()">
+                                        <span class="checkmark"></span>
+                                        Completed
+                                    </label>
+                                </div>
+                                <div class="comment-section">
+                                    <label for="wednesday-comment">Comments:</label>
+                                    <textarea id="wednesday-comment" placeholder="How was your travel-friendly workout? Any mobility improvements?"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Thursday -->
+                        <div class="day-progress-card">
+                            <div class="day-header">
+                                <h3><i class="fas fa-fire"></i> Thursday</h3>
+                                <span class="day-type">Cardio + Intervals</span>
+                            </div>
+                            <div class="progress-content">
+                                <div class="completion-status">
+                                    <label class="checkbox-container">
+                                        <input type="checkbox" id="thursday-complete" onchange="updateProgress()">
+                                        <span class="checkmark"></span>
+                                        Completed
+                                    </label>
+                                </div>
+                                <div class="comment-section">
+                                    <label for="thursday-comment">Comments:</label>
+                                    <textarea id="thursday-comment" placeholder="How did the interval training feel? Energy levels?"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Friday -->
+                        <div class="day-progress-card">
+                            <div class="day-header">
+                                <h3><i class="fas fa-dumbbell"></i> Friday</h3>
+                                <span class="day-type">Strength & Core</span>
+                            </div>
+                            <div class="progress-content">
+                                <div class="completion-status">
+                                    <label class="checkbox-container">
+                                        <input type="checkbox" id="friday-complete" onchange="updateProgress()">
+                                        <span class="checkmark"></span>
+                                        Completed
+                                    </label>
+                                </div>
+                                <div class="comment-section">
+                                    <label for="friday-comment">Comments:</label>
+                                    <textarea id="friday-comment" placeholder="How was your Friday strength session? Any progress on lifts?"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Saturday -->
+                        <div class="day-progress-card">
+                            <div class="day-header">
+                                <h3><i class="fas fa-bicycle"></i> Saturday</h3>
+                                <span class="day-type">Light Cardio & Recovery</span>
+                            </div>
+                            <div class="progress-content">
+                                <div class="completion-status">
+                                    <label class="checkbox-container">
+                                        <input type="checkbox" id="saturday-complete" onchange="updateProgress()">
+                                        <span class="checkmark"></span>
+                                        Completed
+                                    </label>
+                                </div>
+                                <div class="comment-section">
+                                    <label for="saturday-comment">Comments:</label>
+                                    <textarea id="saturday-comment" placeholder="How was your recovery session? Did you feel refreshed?"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Sunday -->
+                        <div class="day-progress-card rest-day">
+                            <div class="day-header">
+                                <h3><i class="fas fa-bed"></i> Sunday</h3>
+                                <span class="day-type">Rest Day</span>
+                            </div>
+                            <div class="progress-content">
+                                <div class="completion-status">
+                                    <label class="checkbox-container">
+                                        <input type="checkbox" id="sunday-complete" onchange="updateProgress()">
+                                        <span class="checkmark"></span>
+                                        Rested Properly
+                                    </label>
+                                </div>
+                                <div class="comment-section">
+                                    <label for="sunday-comment">Comments:</label>
+                                    <textarea id="sunday-comment" placeholder="How was your rest day? Sleep quality? Hydration?"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Weekly Goals Review -->
+                <div class="review-section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-bullseye"></i> Weekly Goals Review</h2>
+                    </div>
+                    
+                    <div class="goals-review">
+                        <div class="goal-review-item">
+                            <div class="goal-info">
+                                <h4>Establish consistent workout habit</h4>
+                                <p>Track if you completed at least 5 workouts this week</p>
+                            </div>
+                            <div class="goal-progress">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" id="habit-progress"></div>
+                                </div>
+                                <span class="progress-text" id="habit-text">0/5</span>
+                            </div>
+                        </div>
+                        
+                        <div class="goal-review-item">
+                            <div class="goal-info">
+                                <h4>Begin gentle cardiovascular conditioning</h4>
+                                <p>Complete Zone 2 cardio sessions (Tuesday & Thursday)</p>
+                            </div>
+                            <div class="goal-progress">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" id="cardio-progress"></div>
+                                </div>
+                                <span class="progress-text" id="cardio-text">0/2</span>
+                            </div>
+                        </div>
+                        
+                        <div class="goal-review-item">
+                            <div class="goal-info">
+                                <h4>Build mobility to offset travel stiffness</h4>
+                                <p>Complete Wednesday's mobility-focused workout</p>
+                            </div>
+                            <div class="goal-progress">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" id="mobility-progress"></div>
+                                </div>
+                                <span class="progress-text" id="mobility-text">0/1</span>
+                            </div>
+                        </div>
+                        
+                        <div class="goal-review-item">
+                            <div class="goal-info">
+                                <h4>Track baseline metrics</h4>
+                                <p>Monitor HR, HRV, weight, and sleep quality</p>
+                            </div>
+                            <div class="goal-progress">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" id="metrics-progress"></div>
+                                </div>
+                                <span class="progress-text" id="metrics-text">0/4</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Weekly Reflection -->
+                <div class="review-section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-lightbulb"></i> Weekly Reflection</h2>
+                    </div>
+                    
+                    <div class="reflection-content">
+                        <div class="reflection-question">
+                            <label for="weekly-highlight">What was your biggest achievement this week?</label>
+                            <textarea id="weekly-highlight" placeholder="Share your proudest moment or biggest win..."></textarea>
+                        </div>
+                        
+                        <div class="reflection-question">
+                            <label for="weekly-challenge">What was your biggest challenge?</label>
+                            <textarea id="weekly-challenge" placeholder="What obstacles did you face and how did you handle them?"></textarea>
+                        </div>
+                        
+                        <div class="reflection-question">
+                            <label for="weekly-improvement">What would you like to improve next week?</label>
+                            <textarea id="weekly-improvement" placeholder="Set intentions for the upcoming week..."></textarea>
+                        </div>
+                        
+                        <div class="reflection-question">
+                            <label for="weekly-energy">How would you rate your energy levels this week? (1-10)</label>
+                            <div class="energy-rating">
+                                <div class="rating-buttons">
+                                    <button class="rating-btn" data-rating="1">1</button>
+                                    <button class="rating-btn" data-rating="2">2</button>
+                                    <button class="rating-btn" data-rating="3">3</button>
+                                    <button class="rating-btn" data-rating="4">4</button>
+                                    <button class="rating-btn" data-rating="5">5</button>
+                                    <button class="rating-btn" data-rating="6">6</button>
+                                    <button class="rating-btn" data-rating="7">7</button>
+                                    <button class="rating-btn" data-rating="8">8</button>
+                                    <button class="rating-btn" data-rating="9">9</button>
+                                    <button class="rating-btn" data-rating="10">10</button>
+                                </div>
+                                <span class="selected-rating" id="energy-rating-display">Not rated</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>elyx</h4>
+                    <p>Empowering better healthcare through technology</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="member-dashboard.html">Dashboard</a></li>
+                        <li><a href="#services">Services</a></li>
+                        <li><a href="#about">About Us</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="#help">Help Center</a></li>
+                        <li><a href="#privacy">Privacy Policy</a></li>
+                        <li><a href="#terms">Terms of Service</a></li>
+                        <li><a href="#faq">FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact Info</h4>
+                    <p><i class="fas fa-phone"></i> mobile number</p>
+                    <p><i class="fas fa-envelope"></i> email id</p>
+                    <p><i class="fas fa-map-marker-alt"></i> address</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 elyx. All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="data-manager.js"></script>
+    <script src="weekly-review.js"></script>
+</body>
+</html>

@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>elyx - Member Dashboard</title>
+    <link rel="stylesheet" href="member-dashboard.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <i class="fas fa-heartbeat"></i>
+                <span>elyx</span>
+            </div>
+            <div class="user-info">
+                <span class="welcome-text">Welcome, Member</span>
+                <button class="logout-btn" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="dashboard-header">
+                <h1>Member Dashboard</h1>
+                <p>Manage your health and appointments</p>
+            </div>
+
+            <!-- Dashboard Options -->
+            <div class="dashboard-grid">
+                <!-- Profile Option -->
+                <div class="dashboard-card" onclick="navigateTo('profile')">
+                    <div class="card-icon">
+                        <i class="fas fa-user-circle"></i>
+                    </div>
+                    <h3>Profile</h3>
+                    <p>View and update your personal information, medical history, and preferences</p>
+                    <div class="card-features">
+                        <div class="feature"><i class="fas fa-check"></i><span>Personal Information</span></div>
+                        <div class="feature"><i class="fas fa-check"></i><span>Medical History</span></div>
+                        <div class="feature"><i class="fas fa-check"></i><span>Preferences</span></div>
+                    </div>
+                    <button class="card-btn"><span>Access Profile</span><i class="fas fa-arrow-right"></i></button>
+                </div>
+
+                <!-- Current Plan Option -->
+                <div class="dashboard-card" onclick="window.location.href='current-plan.html'">
+                    <div class="card-icon"><i class="fas fa-clipboard-list"></i></div>
+                    <h3>Current Plan</h3>
+                    <p>View your current workout plan, goals, and daily breakdown</p>
+                    <div class="card-features">
+                        <div class="feature"><i class="fas fa-check"></i><span>Workout Plan</span></div>
+                        <div class="feature"><i class="fas fa-check"></i><span>Daily Breakdown</span></div>
+                        <div class="feature"><i class="fas fa-check"></i><span>Goals & Tracking</span></div>
+                    </div>
+                    <button class="card-btn"><span>View Plan</span><i class="fas fa-arrow-right"></i></button>
+                </div>
+
+                <!-- Health Report Option -->
+                <div class="dashboard-card" onclick="window.location.href='health-report.html'">
+                    <div class="card-icon"><i class="fas fa-file-medical"></i></div>
+                    <h3>Health Report</h3>
+                    <p>Enter and update your health metrics for your doctor to review</p>
+                    <div class="card-features">
+                        <div class="feature"><i class="fas fa-check"></i><span>HR, HRV, Weight</span></div>
+                        <div class="feature"><i class="fas fa-check"></i><span>Sleep Quality</span></div>
+                        <div class="feature"><i class="fas fa-check"></i><span>Notes</span></div>
+                    </div>
+                    <button class="card-btn"><span>Enter Report</span><i class="fas fa-arrow-right"></i></button>
+                </div>
+
+                <!-- Request Appointment Option -->
+                <div class="dashboard-card" onclick="navigateTo('request-appointment')">
+                    <div class="card-icon"><i class="fas fa-calendar-plus"></i></div>
+                    <h3>Request Appointment</h3>
+                    <p>Schedule new appointments with your healthcare providers</p>
+                    <div class="card-features">
+                        <div class="feature"><i class="fas fa-check"></i><span>Book Appointments</span></div>
+                        <div class="feature"><i class="fas fa-check"></i><span>View Availability</span></div>
+                        <div class="feature"><i class="fas fa-check"></i><span>Manage Schedule</span></div>
+                    </div>
+                    <button class="card-btn"><span>Request Appointment</span><i class="fas fa-arrow-right"></i></button>
+                </div>
+
+                <!-- Chat with Doctor Option -->
+                <div class="dashboard-card" onclick="toggleChat()">
+                    <div class="card-icon">
+                        <i class="fas fa-comments"></i>
+                        <div class="unread-badge" id="chatUnreadBadge">0</div>
+                    </div>
+                    <h3>Chat with Doctor</h3>
+                    <p>Send messages and communicate directly with your healthcare provider</p>
+                    <div class="card-features">
+                        <div class="feature"><i class="fas fa-check"></i><span>Real-time Messaging</span></div>
+                        <div class="feature"><i class="fas fa-check"></i><span>Medical History</span></div>
+                        <div class="feature"><i class="fas fa-check"></i><span>Quick Responses</span></div>
+                    </div>
+                    <button class="card-btn"><span>Open Chat</span><i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <!-- Chat Interface -->
+            <div class="chat-interface" id="chatInterface" style="display: none;">
+                <div class="chat-header">
+                    <h2><i class="fas fa-comments"></i> Chat with Your Doctor</h2>
+                    <button class="close-chat-btn" id="closeChatBtn" onclick="toggleChat()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <div class="chat-container">
+                    <div class="doctor-info" id="doctorInfo">
+                        <div class="doctor-avatar">
+                            <i class="fas fa-user-md"></i>
+                        </div>
+                        <div class="doctor-details">
+                            <div class="doctor-name" id="chatDoctorName">Dr. Jane Smith</div>
+                            <div class="doctor-status">Online</div>
+                        </div>
+                        <div class="chat-options">
+                            <button class="option-btn" id="exportChatBtn" title="Export conversation">
+                                <i class="fas fa-download"></i>
+                            </button>
+                            <button class="option-btn" id="searchChatBtn" title="Search messages">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="chat-messages" id="memberChatMessages">
+                        <div class="chat-welcome">
+                            <i class="fas fa-stethoscope"></i>
+                            <h3>Welcome to Doctor Chat</h3>
+                            <p>Ask questions about your health, medications, or schedule appointments</p>
+                        </div>
+                    </div>
+
+                    <div class="quick-questions" id="quickQuestions">
+                        <h4>Quick Questions:</h4>
+                        <div class="question-buttons">
+                            <button class="quick-question-btn" data-question="How are my blood pressure readings looking?">
+                                <i class="fas fa-heartbeat"></i> Blood Pressure
+                            </button>
+                            <button class="quick-question-btn" data-question="I'd like to schedule a follow-up appointment.">
+                                <i class="fas fa-calendar"></i> Schedule Appointment
+                            </button>
+                            <button class="quick-question-btn" data-question="I'm experiencing some side effects from my medication.">
+                                <i class="fas fa-pills"></i> Medication Concern
+                            </button>
+                            <button class="quick-question-btn" data-question="I have some new symptoms I'd like to discuss.">
+                                <i class="fas fa-notes-medical"></i> New Symptoms
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="chat-input-area">
+                        <div class="typing-indicator" id="typingIndicator" style="display: none;">
+                            <span>Doctor is typing...</span>
+                            <div class="typing-dots">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </div>
+                        </div>
+                        
+                        <div class="message-input-container">
+                            <textarea 
+                                id="memberMessageInput" 
+                                placeholder="Type your message or health question here..." 
+                                rows="2"
+                                maxlength="2000"
+                            ></textarea>
+                            <div class="input-actions">
+                                <div class="message-length" id="messageLength">0/2000</div>
+                                <button class="send-message-btn" id="sendMemberMessageBtn" disabled>
+                                    <i class="fas fa-paper-plane"></i>
+                                    Send
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="quick-actions">
+                <h2>Quick Actions</h2>
+                <div class="action-buttons">
+                    <button class="action-btn" onclick="window.location.href='health-report.html'"><i class="fas fa-file-medical"></i> Update Health Report</button>
+                    <button class="action-btn" onclick="window.location.href='current-plan.html'"><i class="fas fa-clipboard-list"></i> View Plan</button>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>elyx</h4>
+                    <p>Empowering better healthcare through technology</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#services">Services</a></li>
+                        <li><a href="#about">About Us</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="#help">Help Center</a></li>
+                        <li><a href="#privacy">Privacy Policy</a></li>
+                        <li><a href="#terms">Terms of Service</a></li>
+                        <li><a href="#faq">FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact Info</h4>
+                    <p><i class="fas fa-phone"></i> mobile number</p>
+                    <p><i class="fas fa-envelope"></i> email id</p>
+                    <p><i class="fas fa-map-marker-alt"></i> address</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 elyx. All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="data-manager.js"></script>
+    <script src="member-dashboard.js"></script>
+</body>
+</html>
