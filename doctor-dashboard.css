@@ -49,6 +49,35 @@
     justify-content: center;
     font-size: 0.8rem;
     font-weight: 600;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.unread-counter:hover {
+    background: #ff6b7a;
+    transform: scale(1.1);
+    box-shadow: 0 2px 8px rgba(255, 71, 87, 0.3);
+}
+
+.unread-counter:active {
+    transform: scale(0.95);
+}
+
+/* Add a pulsing animation for unread messages */
+@keyframes unreadPulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(255, 71, 87, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(255, 71, 87, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(255, 71, 87, 0);
+    }
+}
+
+.unread-counter[style*="flex"] {
+    animation: unreadPulse 2s infinite;
 }
 
 .toggle-chat-btn {
@@ -607,6 +636,44 @@
     50% {
         opacity: 0.5;
     }
+}
+
+/* Enhanced Notification Animations */
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOutRight {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+/* Enhanced notification toast styles */
+.elyx-notification-toast {
+    transition: all 0.3s ease;
+}
+
+.elyx-notification-toast:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+}
+
+/* Unread badge animation */
+.unread-counter {
+    animation: pulse 2s infinite;
 }
 
 .typing-indicator {

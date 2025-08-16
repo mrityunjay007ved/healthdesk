@@ -305,6 +305,11 @@ function initializeMemberChat() {
     window.addEventListener('storage', handleMemberCrossTabMessage);
     console.log('✅ Member cross-tab message listener attached');
     
+    // Polling update listener
+    console.log('🔄 Attaching member polling update listener...');
+    window.addEventListener('elyxPollingUpdate', handleMemberPollingUpdate);
+    console.log('✅ Member polling update listener attached');
+    
     // Load member chat data
     loadMemberConversation();
     updateMemberUnreadBadge();
@@ -318,15 +323,20 @@ async function loadMemberConversation() {
     if (!member) return;
     
     try {
+        console.log('🔄 Loading member conversation for:', member);
+        
         // Get member's conversations (should be only one with doctor)
         const conversations = window.dataManager.getConversationsForUser(member.id);
+        console.log('📋 Found conversations:', conversations);
         
         if (conversations.length > 0) {
             const conversation = conversations[0]; // Member should only have one conversation with doctor
             currentMemberConversation = conversation;
+            console.log('✅ Set current conversation:', conversation);
             
             const doctor = conversation.otherParticipants[0];
             if (doctor) {
+                console.log('👩‍⚕️ Doctor info:', doctor);
                 updateMemberChatHeader(doctor);
                 await loadMemberMessages(conversation.id);
                 
@@ -335,11 +345,12 @@ async function loadMemberConversation() {
                 updateMemberUnreadBadge();
             }
         } else {
+            console.log('⚠️ No conversations found, creating new one...');
             // No conversation exists yet, try to create one with the default doctor
             await createConversationWithDoctor();
         }
     } catch (error) {
-        console.error('Error loading member conversation:', error);
+        console.error('❌ Error loading member conversation:', error);
         showNotification('Error loading chat', 'error');
     }
 }
@@ -390,12 +401,15 @@ function updateMemberChatHeader(doctor) {
 
 async function loadMemberMessages(conversationId) {
     try {
+        console.log('🔄 Loading messages for conversation:', conversationId);
         const messages = window.dataManager.getMessagesForConversation(conversationId);
+        console.log('📨 Found messages:', messages);
+        
         renderMemberMessages(messages);
         scrollMemberChatToBottom();
-        console.log('Loaded member messages:', messages);
+        console.log('✅ Messages loaded and rendered successfully');
     } catch (error) {
-        console.error('Error loading member messages:', error);
+        console.error('❌ Error loading member messages:', error);
         showNotification('Error loading messages', 'error');
     }
 }
@@ -403,6 +417,8 @@ async function loadMemberMessages(conversationId) {
 function renderMemberMessages(messages) {
     const container = document.getElementById('memberChatMessages');
     if (!container) return;
+    
+    console.log('🎨 Rendering member messages:', messages);
     
     container.innerHTML = '';
     
@@ -424,8 +440,11 @@ function renderMemberMessages(messages) {
     }
     
     const member = getCurrentMember();
+    console.log('👤 Current member for rendering:', member);
     
-    messages.forEach(message => {
+    messages.forEach((message, index) => {
+        console.log(`📝 Rendering message ${index + 1}:`, message);
+        
         const messageEl = document.createElement('div');
         messageEl.className = 'member-message';
         messageEl.classList.add(message.senderId === member.id ? 'sent' : 'received');
@@ -457,6 +476,7 @@ function renderMemberMessages(messages) {
         `;
         
         container.appendChild(messageEl);
+        console.log(`✅ Message ${index + 1} rendered:`, senderLabel, message.content.substring(0, 50) + '...');
     });
     
     // Hide quick questions if we have messages
@@ -464,6 +484,8 @@ function renderMemberMessages(messages) {
     if (quickQuestions) {
         quickQuestions.style.display = 'none';
     }
+    
+    console.log(`✅ Total messages rendered: ${messages.length}`);
 }
 
 function handleMemberMessageInput() {
@@ -558,6 +580,9 @@ async function sendMemberMessage() {
         
         showNotification('Message sent to doctor', 'success');
         
+        // Update unread badge
+        updateMemberUnreadBadge();
+        
         // Simulate doctor typing (for demo purposes)
         setTimeout(() => {
             showDoctorTyping();
@@ -597,9 +622,73 @@ function updateMemberUnreadBadge() {
         if (badge) {
             badge.textContent = unreadCount;
             badge.style.display = unreadCount > 0 ? 'flex' : 'none';
+            
+            // Add click functionality to open chat with unread messages
+            if (unreadCount > 0) {
+                badge.style.cursor = 'pointer';
+                badge.title = `Click to open chat (${unreadCount} unread message${unreadCount > 1 ? 's' : ''})`;
+                
+                // Remove existing click listener to avoid duplicates
+                badge.removeEventListener('click', openMemberChatWithUnread);
+                badge.addEventListener('click', openMemberChatWithUnread);
+            } else {
+                badge.style.cursor = 'default';
+                badge.title = '';
+                badge.removeEventListener('click', openMemberChatWithUnread);
+            }
         }
     } catch (error) {
         console.error('Error updating member unread badge:', error);
+    }
+}
+
+// Function to open member chat with unread messages
+function openMemberChatWithUnread(event) {
+    event.stopPropagation(); // Prevent triggering the card click
+    
+    console.log('🔄 Opening member chat with unread messages...');
+    
+    const member = getCurrentMember();
+    if (!member) return;
+    
+    try {
+        const unreadCount = window.dataManager.getUnreadMessageCount(member.id);
+        
+        // Open the chat interface
+        if (!chatOpen) {
+            toggleChat();
+        }
+        
+        // Show notification
+        showNotification(`Opening chat with ${unreadCount} unread message${unreadCount > 1 ? 's' : ''}`, 'success');
+    } catch (error) {
+        console.error('Error opening member chat:', error);
+        showNotification('Error opening chat', 'error');
+    }
+}
+
+// Handle polling updates for member
+function handleMemberPollingUpdate(event) {
+    console.log('🔄 Member received polling update:', event.detail);
+    
+    const member = getCurrentMember();
+    if (!member) return;
+    
+    try {
+        // Check if there are new messages
+        const currentConversations = window.dataManager.getConversationsForUser(member.id);
+        
+        if (currentMemberConversation) {
+            // Reload current conversation messages
+            loadMemberMessages(currentMemberConversation.id);
+        }
+        
+        // Update unread badge
+        updateMemberUnreadBadge();
+        
+        console.log('✅ Member polling update processed');
+    } catch (error) {
+        console.error('❌ Error processing member polling update:', error);
     }
 }
 
@@ -630,16 +719,18 @@ function handleMemberRealTimeMessage(event) {
     // Update UI if this is the current conversation
     if (currentMemberConversation && currentMemberConversation.id === conversation.id) {
         console.log('🔄 Updating current conversation messages...');
-        loadMemberMessages(conversation.id);
         
-        // Mark as read if chat is open
-        if (chatOpen) {
-            console.log('📖 Chat is open, marking messages as read...');
-            setTimeout(() => {
-                window.dataManager.markMessagesAsRead(member.id, conversation.id);
+        // Reload messages to get the latest
+        setTimeout(async () => {
+            await loadMemberMessages(conversation.id);
+            
+            // Mark as read if chat is open
+            if (chatOpen) {
+                console.log('📖 Chat is open, marking messages as read...');
+                await window.dataManager.markMessagesAsRead(member.id, conversation.id);
                 updateMemberUnreadBadge();
-            }, 1000);
-        }
+            }
+        }, 500);
     } else {
         console.log('ℹ️ Message for different conversation or no current conversation');
     }
@@ -668,7 +759,9 @@ function handleMemberCrossTabMessage(event) {
             if (crossTabData.type === 'elyxNewMessage') {
                 // Re-trigger the message event as if it came from same tab
                 console.log('🔄 Re-triggering member message event from cross-tab...');
-                handleMemberRealTimeMessage({ detail: crossTabData.detail });
+                setTimeout(() => {
+                    handleMemberRealTimeMessage({ detail: crossTabData.detail });
+                }, 100);
             }
         } catch (error) {
             console.error('❌ Error parsing member cross-tab message:', error);
@@ -814,6 +907,11 @@ window.addEventListener('load', async function() {
         
         // Update unread badge after data is loaded
         updateMemberUnreadBadge();
+        
+        // Force refresh the page data to ensure we have the latest
+        console.log('🔄 Refreshing data to ensure latest messages...');
+        await window.dataManager.loadData();
+        
         console.log('✅ Member chat system ready');
         
     } catch (error) {
@@ -826,3 +924,74 @@ window.addEventListener('load', async function() {
 if ('Notification' in window && Notification.permission === 'default') {
     Notification.requestPermission();
 }
+
+// Enhanced notification event listeners
+window.addEventListener('openConversation', function(event) {
+    const { conversationId, messageId } = event.detail;
+    console.log('🔄 Opening conversation from notification:', conversationId);
+    
+    // Open chat if not already open
+    if (!chatOpen) {
+        toggleChat();
+    }
+    
+    // Load the specific conversation
+    if (conversationId && currentMemberConversation?.id === conversationId) {
+        loadMemberMessages(conversationId);
+        scrollMemberChatToBottom();
+    }
+});
+
+// Enhanced notification permission request
+function requestEnhancedNotifications() {
+    if ('Notification' in window) {
+        if (Notification.permission === 'default') {
+            Notification.requestPermission().then(permission => {
+                if (permission === 'granted') {
+                    showNotification('Enhanced notifications enabled!', 'success');
+                }
+            });
+        } else if (Notification.permission === 'granted') {
+            showNotification('Enhanced notifications are already enabled', 'success');
+        }
+    }
+}
+
+// Auto-request notification permission on first visit
+if (!localStorage.getItem('elyx_notification_requested')) {
+    setTimeout(() => {
+        requestEnhancedNotifications();
+        localStorage.setItem('elyx_notification_requested', 'true');
+    }, 3000);
+}
+
+// Debug function to check data loading
+function debugDataLoading() {
+    console.log('🔍 DEBUG: Checking data loading...');
+    console.log('📊 Data manager:', window.dataManager);
+    console.log('📋 Data loaded:', window.dataManager?.data);
+    console.log('👥 Users:', window.dataManager?.data?.users);
+    console.log('🗨️ Conversations:', window.dataManager?.data?.conversations);
+    console.log('📨 Messages:', window.dataManager?.data?.messages);
+    
+    const member = getCurrentMember();
+    console.log('👤 Current member:', member);
+    
+    if (member && window.dataManager?.data) {
+        const conversations = window.dataManager.getConversationsForUser(member.id);
+        console.log('💬 Member conversations:', conversations);
+        
+        if (conversations.length > 0) {
+            const messages = window.dataManager.getMessagesForConversation(conversations[0].id);
+            console.log('📝 Conversation messages:', messages);
+        }
+    }
+}
+
+    // Run debug after 5 seconds
+    setTimeout(debugDataLoading, 5000);
+    
+    // Start message polling for better synchronization
+    if (window.dataManager) {
+        window.dataManager.startMessagePolling();
+    }

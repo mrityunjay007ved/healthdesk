@@ -72,9 +72,9 @@
       "participantEmails": ["member@example.com", "doctor@example.com"],
       "participantNames": ["John Doe", "Dr. Jane Smith"],
       "createdAt": "2024-08-15T12:00:00.000Z",
-      "lastMessageAt": "2024-08-15T12:30:00.000Z",
+      "lastMessageAt": "2024-08-15T12:50:00.000Z",
       "unreadCount": {
-        "1": 0,
+        "1": 1,
         "2": 1
       }
     }
@@ -95,6 +95,74 @@
         "context": "health_inquiry",
         "priority": "normal",
         "tags": ["blood_pressure", "health_metrics"]
+      }
+    },
+    {
+      "id": "msg_2",
+      "conversationId": "conv_1",
+      "senderId": 2,
+      "senderEmail": "doctor@example.com",
+      "senderName": "Dr. Jane Smith",
+      "senderType": "doctor",
+      "content": "Hello John! I can see your blood pressure readings from your health report. What specific readings are you concerned about?",
+      "timestamp": "2024-08-15T12:35:00.000Z",
+      "readBy": [2],
+      "messageType": "text",
+      "metadata": {
+        "context": "health_inquiry",
+        "priority": "normal",
+        "tags": ["blood_pressure", "response"]
+      }
+    },
+    {
+      "id": "msg_3",
+      "conversationId": "conv_1",
+      "senderId": 1,
+      "senderEmail": "member@example.com",
+      "senderName": "John Doe",
+      "senderType": "member",
+      "content": "My readings have been around 140/90 for the past week. Should I be worried?",
+      "timestamp": "2024-08-15T12:40:00.000Z",
+      "readBy": [1],
+      "messageType": "text",
+      "metadata": {
+        "context": "health_inquiry",
+        "priority": "normal",
+        "tags": ["blood_pressure", "concern"]
+      }
+    },
+    {
+      "id": "msg_4",
+      "conversationId": "conv_1",
+      "senderId": 2,
+      "senderEmail": "doctor@example.com",
+      "senderName": "Dr. Jane Smith",
+      "senderType": "doctor",
+      "content": "140/90 is considered elevated but not immediately dangerous. However, I'd like to schedule a follow-up appointment to discuss this. Can you come in next week?",
+      "timestamp": "2024-08-15T12:45:00.000Z",
+      "readBy": [2],
+      "messageType": "text",
+      "metadata": {
+        "context": "appointment",
+        "priority": "high",
+        "tags": ["blood_pressure", "appointment", "follow_up"]
+      }
+    },
+    {
+      "id": "msg_5",
+      "conversationId": "conv_1",
+      "senderId": 1,
+      "senderEmail": "member@example.com",
+      "senderName": "John Doe",
+      "senderType": "member",
+      "content": "Yes, that would be great. What day works best for you?",
+      "timestamp": "2024-08-15T12:50:00.000Z",
+      "readBy": [1],
+      "messageType": "text",
+      "metadata": {
+        "context": "appointment",
+        "priority": "normal",
+        "tags": ["appointment", "scheduling"]
       }
     }
   ],

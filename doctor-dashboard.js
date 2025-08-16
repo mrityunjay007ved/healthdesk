@@ -148,6 +148,10 @@ window.addEventListener('DOMContentLoaded', async ()=>{
 		
 		console.log('✅ Data manager loaded successfully');
 		
+		// Force refresh the page data to ensure we have the latest
+		console.log('🔄 Refreshing data to ensure latest messages...');
+		await window.dataManager.loadData();
+		
 		// Initialize chat after data is loaded
 		updateUnreadCounter();
 		showChatStatus('Chat system ready!', 'success');
@@ -254,6 +258,11 @@ function initializeChat() {
 	window.addEventListener('storage', handleCrossTabMessage);
 	console.log('✅ Cross-tab message listener attached');
 	
+	// Polling update listener
+	console.log('🔄 Attaching doctor polling update listener...');
+	window.addEventListener('elyxPollingUpdate', handleDoctorPollingUpdate);
+	console.log('✅ Doctor polling update listener attached');
+	
 	// Load conversations and update UI
 	loadConversations();
 	updateUnreadCounter();
@@ -280,11 +289,13 @@ async function loadConversations() {
 	if (!doctor) return;
 	
 	try {
+		console.log('🔄 Loading conversations for doctor:', doctor);
 		const conversations = window.dataManager.getConversationsForUser(doctor.id);
+		console.log('📋 Found conversations:', conversations);
 		renderConversations(conversations);
-		console.log('Loaded conversations:', conversations);
+		console.log('✅ Conversations loaded and rendered successfully');
 	} catch (error) {
-		console.error('Error loading conversations:', error);
+		console.error('❌ Error loading conversations:', error);
 		toast('Error loading conversations');
 	}
 }
@@ -293,16 +304,22 @@ function renderConversations(conversations) {
 	const container = document.getElementById('conversationsContent');
 	if (!container) return;
 	
+	console.log('🎨 Rendering conversations:', conversations);
 	container.innerHTML = '';
 	
 	if (conversations.length === 0) {
 		container.innerHTML = '<div style="padding: 20px; text-align: center; color: #666;">No conversations yet</div>';
+		console.log('ℹ️ No conversations to render');
 		return;
 	}
 	
 	conversations.forEach(conv => {
+		console.log('📝 Processing conversation:', conv);
 		const otherParticipant = conv.otherParticipants[0];
-		if (!otherParticipant) return;
+		if (!otherParticipant) {
+			console.log('⚠️ No other participant found for conversation:', conv.id);
+			return;
+		}
 		
 		const item = document.createElement('div');
 		item.className = 'conversation-item';
@@ -317,6 +334,9 @@ function renderConversations(conversations) {
 		const timeAgo = conv.lastMessage 
 			? formatTimeAgo(new Date(conv.lastMessage.timestamp))
 			: formatTimeAgo(new Date(conv.createdAt));
+		
+		console.log('💬 Last message preview:', lastMessagePreview);
+		console.log('⏰ Time ago:', timeAgo);
 		
 		item.innerHTML = `
 			<div class="conversation-avatar">
@@ -334,7 +354,10 @@ function renderConversations(conversations) {
 		
 		item.addEventListener('click', () => openConversation(conv, otherParticipant));
 		container.appendChild(item);
+		console.log('✅ Conversation item added:', otherParticipant.name);
 	});
+	
+	console.log('✅ All conversations rendered');
 }
 
 function filterConversations() {
@@ -350,6 +373,9 @@ function filterConversations() {
 }
 
 async function openConversation(conversation, patientInfo) {
+	console.log('🔄 Opening conversation:', conversation);
+	console.log('👤 Patient info:', patientInfo);
+	
 	currentConversation = conversation;
 	currentPatientInfo = patientInfo;
 	
@@ -360,7 +386,15 @@ async function openConversation(conversation, patientInfo) {
 	document.querySelectorAll('.conversation-item').forEach(item => {
 		item.classList.remove('active');
 	});
-	event.currentTarget.classList.add('active');
+	
+	// Find and mark the correct conversation item as active
+	const conversationItems = document.querySelectorAll('.conversation-item');
+	conversationItems.forEach(item => {
+		const conversationName = item.querySelector('.conversation-name');
+		if (conversationName && conversationName.textContent === patientInfo.name) {
+			item.classList.add('active');
+		}
+	});
 	
 	// Load and display messages
 	await loadMessages(conversation.id);
@@ -368,9 +402,11 @@ async function openConversation(conversation, patientInfo) {
 	// Mark messages as read
 	const doctor = getCurrentUser();
 	if (doctor) {
+		console.log('📖 Marking messages as read for doctor:', doctor.id);
 		await window.dataManager.markMessagesAsRead(doctor.id, conversation.id);
 		updateUnreadCounter();
 		loadConversations(); // Refresh to update unread counts
+		console.log('✅ Messages marked as read');
 	}
 }
 
@@ -384,12 +420,14 @@ function updateChatHeader(patientInfo) {
 
 async function loadMessages(conversationId) {
 	try {
+		console.log('🔄 Loading messages for conversation:', conversationId);
 		const messages = window.dataManager.getMessagesForConversation(conversationId);
+		console.log('📨 Found messages:', messages);
 		renderMessages(messages);
 		scrollToBottom();
-		console.log('Loaded messages:', messages);
+		console.log('✅ Messages loaded and rendered successfully');
 	} catch (error) {
-		console.error('Error loading messages:', error);
+		console.error('❌ Error loading messages:', error);
 		toast('Error loading messages');
 	}
 }
@@ -521,7 +559,7 @@ async function sendMessage() {
 		
 		// Reload messages and conversations
 		await loadMessages(currentConversation.id);
-		loadConversations();
+		await loadConversations();
 		updateUnreadCounter();
 		
 		toast('Message sent successfully');
@@ -634,9 +672,85 @@ function updateUnreadCounter() {
 		if (counter) {
 			counter.textContent = unreadCount;
 			counter.style.display = unreadCount > 0 ? 'flex' : 'none';
+			
+			// Add click functionality to open unread messages
+			if (unreadCount > 0) {
+				counter.style.cursor = 'pointer';
+				counter.title = `Click to view ${unreadCount} unread message${unreadCount > 1 ? 's' : ''}`;
+				
+				// Remove existing click listener to avoid duplicates
+				counter.removeEventListener('click', openUnreadMessages);
+				counter.addEventListener('click', openUnreadMessages);
+			} else {
+				counter.style.cursor = 'default';
+				counter.title = '';
+				counter.removeEventListener('click', openUnreadMessages);
+			}
 		}
 	} catch (error) {
 		console.error('Error updating unread counter:', error);
+	}
+}
+
+// Function to open conversation with unread messages
+async function openUnreadMessages() {
+	console.log('🔄 Opening unread messages...');
+	
+	const doctor = getCurrentUser();
+	if (!doctor) return;
+	
+	try {
+		// Get all conversations for the doctor
+		const conversations = window.dataManager.getConversationsForUser(doctor.id);
+		
+		// Find the conversation with the most recent unread messages
+		let conversationWithUnread = null;
+		let latestUnreadTime = null;
+		
+		for (const conv of conversations) {
+			if (conv.unreadCount > 0) {
+				// Get the latest unread message for this conversation
+				const messages = window.dataManager.getMessagesForConversation(conv.id);
+				const unreadMessages = messages.filter(msg => 
+					msg.senderId !== doctor.id && !msg.readBy.includes(doctor.id)
+				);
+				
+				if (unreadMessages.length > 0) {
+					const latestMessage = unreadMessages[unreadMessages.length - 1];
+					const messageTime = new Date(latestMessage.timestamp);
+					
+					if (!latestUnreadTime || messageTime > latestUnreadTime) {
+						latestUnreadTime = messageTime;
+						conversationWithUnread = conv;
+					}
+				}
+			}
+		}
+		
+		if (conversationWithUnread) {
+			console.log('✅ Found conversation with unread messages:', conversationWithUnread);
+			
+			// Show chat container if not visible
+			if (document.getElementById('chatContainer').style.display === 'none') {
+				toggleChatContainer(true);
+			}
+			
+			// Open the conversation
+			const otherParticipant = conversationWithUnread.otherParticipants[0];
+			if (otherParticipant) {
+				await openConversation(conversationWithUnread, otherParticipant);
+				
+				// Show a notification
+				toast(`Opened conversation with ${otherParticipant.name} (${conversationWithUnread.unreadCount} unread messages)`);
+			}
+		} else {
+			console.log('ℹ️ No conversations with unread messages found');
+			toast('No unread messages found');
+		}
+		
+	} catch (error) {
+		console.error('❌ Error opening unread messages:', error);
+		toast('Error opening unread messages');
 	}
 }
 
@@ -660,12 +774,18 @@ function handleRealTimeMessage(event) {
 	// Update UI if this is the current conversation
 	if (currentConversation && currentConversation.id === conversation.id) {
 		console.log('🔄 Updating current conversation messages...');
-		loadMessages(conversation.id);
+		
+		// Reload messages to get the latest
+		setTimeout(async () => {
+			await loadMessages(conversation.id);
+		}, 500);
 	}
 	
 	// Update conversations list and counters
-	loadConversations();
-	updateUnreadCounter();
+	setTimeout(async () => {
+		await loadConversations();
+		updateUnreadCounter();
+	}, 300);
 	
 	// Show notification
 	showMessageNotification(message);
@@ -683,7 +803,9 @@ function handleCrossTabMessage(event) {
 			if (crossTabData.type === 'elyxNewMessage') {
 				// Re-trigger the message event as if it came from same tab
 				console.log('🔄 Re-triggering message event from cross-tab...');
-				handleRealTimeMessage({ detail: crossTabData.detail });
+				setTimeout(() => {
+					handleRealTimeMessage({ detail: crossTabData.detail });
+				}, 100);
 			}
 		} catch (error) {
 			console.error('❌ Error parsing cross-tab message:', error);
@@ -979,4 +1101,105 @@ function hideChatStatus() {
 // Request notification permission
 if ('Notification' in window && Notification.permission === 'default') {
 	Notification.requestPermission();
+}
+
+// Enhanced notification event listeners
+window.addEventListener('openConversation', function(event) {
+	const { conversationId, messageId } = event.detail;
+	console.log('🔄 Opening conversation from notification:', conversationId);
+	
+	// Show chat container if not visible
+	if (document.getElementById('chatContainer').style.display === 'none') {
+		toggleChatContainer(true);
+	}
+	
+	// Find and open the specific conversation
+	if (conversationId) {
+		const conversations = window.dataManager.getConversationsForUser(getCurrentUser().id);
+		const targetConversation = conversations.find(conv => conv.id === conversationId);
+		
+		if (targetConversation) {
+			const otherParticipant = targetConversation.otherParticipants[0];
+			openConversation(targetConversation, otherParticipant);
+		}
+	}
+});
+
+// Enhanced notification permission request
+function requestEnhancedNotifications() {
+	if ('Notification' in window) {
+		if (Notification.permission === 'default') {
+			Notification.requestPermission().then(permission => {
+				if (permission === 'granted') {
+					toast('Enhanced notifications enabled!');
+				}
+			});
+		} else if (Notification.permission === 'granted') {
+			toast('Enhanced notifications are already enabled');
+		}
+	}
+}
+
+	// Auto-request notification permission on first visit
+	if (!localStorage.getItem('elyx_notification_requested')) {
+		setTimeout(() => {
+			requestEnhancedNotifications();
+			localStorage.setItem('elyx_notification_requested', 'true');
+		}, 3000);
+	}
+	
+	// Start message polling for better synchronization
+	if (window.dataManager) {
+		window.dataManager.startMessagePolling();
+	}
+
+// Debug function to check data loading
+function debugDataLoading() {
+	console.log('🔍 DEBUG: Checking data loading...');
+	console.log('📊 Data manager:', window.dataManager);
+	console.log('📋 Data loaded:', window.dataManager?.data);
+	console.log('👥 Users:', window.dataManager?.data?.users);
+	console.log('🗨️ Conversations:', window.dataManager?.data?.conversations);
+	console.log('📨 Messages:', window.dataManager?.data?.messages);
+	
+	const doctor = getCurrentUser();
+	console.log('👩‍⚕️ Current doctor:', doctor);
+	
+	if (doctor && window.dataManager?.data) {
+		const conversations = window.dataManager.getConversationsForUser(doctor.id);
+		console.log('💬 Doctor conversations:', conversations);
+		
+		if (conversations.length > 0) {
+			const messages = window.dataManager.getMessagesForConversation(conversations[0].id);
+			console.log('📝 Conversation messages:', messages);
+		}
+	}
+}
+
+// Run debug after 5 seconds
+setTimeout(debugDataLoading, 5000);
+
+// Handle polling updates for doctor
+function handleDoctorPollingUpdate(event) {
+	console.log('🔄 Doctor received polling update:', event.detail);
+	
+	const doctor = getCurrentUser();
+	if (!doctor) return;
+	
+	try {
+		// Reload conversations to check for updates
+		loadConversations();
+		
+		// Update unread counter
+		updateUnreadCounter();
+		
+		// If a conversation is currently open, reload its messages
+		if (currentConversation) {
+			loadMessages(currentConversation.id);
+		}
+		
+		console.log('✅ Doctor polling update processed');
+	} catch (error) {
+		console.error('❌ Error processing doctor polling update:', error);
+	}
 }

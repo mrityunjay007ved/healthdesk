@@ -37,6 +37,24 @@ class DataManager {
     
     async _performLoad() {
         try {
+            // First try to load from localStorage (for persistence)
+            const localStorageData = localStorage.getItem('elyxData');
+            if (localStorageData) {
+                try {
+                    this.data = JSON.parse(localStorageData);
+                    console.log('✅ Data loaded from localStorage:', this.data);
+                    
+                    // Validate data structure
+                    if (!this.data.users || !Array.isArray(this.data.users)) {
+                        throw new Error('Invalid localStorage data structure');
+                    }
+                    
+                    return this.data;
+                } catch (localStorageError) {
+                    console.log('⚠️ localStorage data invalid, loading from data.json...');
+                }
+            }
+            
             console.log('🔄 Loading data from data.json...');
             const response = await fetch('data.json');
             
@@ -45,12 +63,15 @@ class DataManager {
             }
             
             this.data = await response.json();
-            console.log('✅ Data loaded successfully:', this.data);
+            console.log('✅ Data loaded from data.json:', this.data);
             
             // Validate data structure
             if (!this.data.users || !Array.isArray(this.data.users)) {
                 throw new Error('Invalid data structure: users array missing');
             }
+            
+            // Save to localStorage for future persistence
+            await this.saveData();
             
             return this.data;
         } catch (error) {
@@ -104,17 +125,22 @@ class DataManager {
     async saveData() {
         try {
             // In a real application, this would be a POST request to a backend API
-            console.log('Saving data:', this.data);
+            console.log('💾 Saving data to localStorage...');
             
-            // For demonstration, we'll store in localStorage as well
+            // Store in localStorage for persistence
             localStorage.setItem('elyxData', JSON.stringify(this.data));
+            console.log('✅ Data saved to localStorage');
+            
+            // Also save to sessionStorage for immediate access
+            sessionStorage.setItem('elyxData', JSON.stringify(this.data));
+            console.log('✅ Data saved to sessionStorage');
             
             // Simulate API call
             await this.simulateAPICall('POST', '/api/save-data', this.data);
             
             return true;
         } catch (error) {
-            console.error('Error saving data:', error);
+            console.error('❌ Error saving data:', error);
             return false;
         }
     }
@@ -310,6 +336,8 @@ class DataManager {
     async sendMessage(senderId, conversationId, content, messageType = 'text', metadata = {}) {
         if (!this.data) await this.loadData();
         
+        console.log('📤 Sending message:', { senderId, conversationId, content });
+        
         const sender = this.data.users.find(u => u.id === senderId);
         const conversation = this.data.conversations.find(c => c.id === conversationId);
         
@@ -337,6 +365,8 @@ class DataManager {
             }
         };
         
+        console.log('✅ Message created:', message);
+        
         // Add message to data
         this.data.messages.push(message);
         
@@ -347,12 +377,16 @@ class DataManager {
         conversation.participantIds.forEach(participantId => {
             if (participantId !== senderId) {
                 conversation.unreadCount[participantId] = (conversation.unreadCount[participantId] || 0) + 1;
+                console.log(`📊 Updated unread count for user ${participantId}: ${conversation.unreadCount[participantId]}`);
             }
         });
         
+        console.log('💾 Saving data...');
         await this.saveData();
+        console.log('✅ Data saved successfully');
         
         // Simulate real-time notification
+        console.log('📡 Sending real-time notification...');
         this.simulateRealTimeNotification(message, conversation);
         
         return message;
@@ -361,6 +395,8 @@ class DataManager {
     // Mark messages as read
     async markMessagesAsRead(userId, conversationId, messageIds = null) {
         if (!this.data) await this.loadData();
+        
+        console.log(`📖 Marking messages as read for user ${userId} in conversation ${conversationId}`);
         
         const conversation = this.data.conversations.find(c => c.id === conversationId);
         if (!conversation) {
@@ -380,15 +416,20 @@ class DataManager {
             );
         }
         
+        console.log(`📝 Found ${messagesToUpdate.length} messages to mark as read`);
+        
         // Update read status
         messagesToUpdate.forEach(message => {
             if (!message.readBy.includes(userId)) {
                 message.readBy.push(userId);
+                console.log(`✅ Marked message ${message.id} as read by user ${userId}`);
             }
         });
         
         // Reset unread count for this user
+        const oldUnreadCount = conversation.unreadCount[userId] || 0;
         conversation.unreadCount[userId] = 0;
+        console.log(`📊 Reset unread count for user ${userId}: ${oldUnreadCount} → 0`);
         
         await this.saveData();
         
@@ -397,43 +438,79 @@ class DataManager {
 
     // Get conversations for a user
     getConversationsForUser(userId) {
-        if (!this.data) return [];
+        if (!this.data) {
+            console.log('❌ No data available in data manager');
+            return [];
+        }
         
-        return this.data.conversations
-            .filter(conv => conv.participantIds.includes(userId))
+        console.log('🔍 Looking for conversations for user ID:', userId);
+        console.log('📋 Available conversations:', this.data.conversations);
+        console.log('👥 Available users:', this.data.users);
+        
+        const userConversations = this.data.conversations
+            .filter(conv => conv.participantIds.includes(userId));
+        
+        console.log('✅ Found conversations for user:', userConversations);
+        
+        return userConversations
             .sort((a, b) => new Date(b.lastMessageAt) - new Date(a.lastMessageAt))
             .map(conv => {
+                console.log('🔄 Processing conversation:', conv);
+                
                 // Get the other participant(s)
                 const otherParticipants = conv.participantIds
                     .filter(id => id !== userId)
                     .map(id => {
                         const user = this.data.users.find(u => u.id === id);
+                        console.log(`👤 Looking for user ID ${id}:`, user);
                         return user ? { id: user.id, name: user.name, email: user.email, userType: user.userType } : null;
                     })
                     .filter(Boolean);
                 
+                console.log('👥 Other participants:', otherParticipants);
+                
                 // Get last message
-                const lastMessage = this.data.messages
-                    .filter(m => m.conversationId === conv.id)
+                const conversationMessages = this.data.messages.filter(m => m.conversationId === conv.id);
+                console.log('📨 Messages for conversation:', conversationMessages);
+                
+                const lastMessage = conversationMessages
                     .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))[0];
                 
-                return {
+                console.log('📝 Last message:', lastMessage);
+                
+                const result = {
                     ...conv,
                     otherParticipants,
                     lastMessage,
                     unreadCount: conv.unreadCount[userId] || 0
                 };
+                
+                console.log('✅ Processed conversation result:', result);
+                return result;
             });
     }
 
     // Get messages for a conversation
     getMessagesForConversation(conversationId, limit = 50, offset = 0) {
-        if (!this.data) return [];
+        if (!this.data) {
+            console.log('❌ No data available in data manager');
+            return [];
+        }
         
-        return this.data.messages
-            .filter(m => m.conversationId === conversationId)
+        console.log('🔍 Looking for messages in conversation:', conversationId);
+        console.log('📨 All available messages:', this.data.messages);
+        
+        const conversationMessages = this.data.messages
+            .filter(m => m.conversationId === conversationId);
+        
+        console.log('✅ Found messages for conversation:', conversationMessages);
+        
+        const sortedMessages = conversationMessages
             .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp))
             .slice(offset, offset + limit);
+        
+        console.log('📝 Returning sorted messages:', sortedMessages);
+        return sortedMessages;
     }
 
     // Get unread message count for a user
@@ -569,7 +646,8 @@ class DataManager {
         };
         
         // Use a unique key that changes each time to trigger storage event
-        localStorage.setItem(`elyx_broadcast_${Date.now()}_${Math.random()}`, JSON.stringify(crossTabData));
+        const broadcastKey = `elyx_broadcast_${Date.now()}_${Math.random()}`;
+        localStorage.setItem(broadcastKey, JSON.stringify(crossTabData));
         
         // Clean up old broadcast messages (keep only last 5)
         const allKeys = Object.keys(localStorage);
@@ -580,19 +658,187 @@ class DataManager {
         
         console.log('✅ Real-time notification sent to all tabs');
         
-        // Simple listener count check (DevTools only)
-        try {
-            if (typeof getEventListeners !== 'undefined') {
-                const listeners = getEventListeners(window);
-                if (listeners && listeners.elyxNewMessage) {
-                    console.log('👂 Current elyxNewMessage listeners:', listeners.elyxNewMessage.length);
-                }
-            } else {
-                console.log('📡 Event dispatched (listener count check unavailable)');
+        // Enhanced notification system
+        this.showEnhancedNotification(message, conversation);
+        
+        // Force a small delay to ensure the event is processed
+        setTimeout(() => {
+            console.log('⏰ Real-time notification processing completed');
+        }, 100);
+    }
+
+    // Start polling for new messages (for better synchronization)
+    startMessagePolling() {
+        console.log('🔄 Starting message polling for real-time sync...');
+        
+        // Poll every 2 seconds for new messages
+        this.pollingInterval = setInterval(async () => {
+            try {
+                // Reload data to get latest messages
+                await this.loadData();
+                
+                // Dispatch a polling event for dashboards to check for updates
+                window.dispatchEvent(new CustomEvent('elyxPollingUpdate', {
+                    detail: {
+                        timestamp: new Date().toISOString(),
+                        messageCount: this.data.messages.length,
+                        conversationCount: this.data.conversations.length
+                    }
+                }));
+                
+                console.log('📡 Polling update dispatched');
+            } catch (error) {
+                console.error('❌ Error during polling:', error);
             }
-        } catch (e) {
-            console.log('📡 Event dispatched successfully');
+        }, 2000);
+        
+        console.log('✅ Message polling started');
+    }
+
+    // Stop polling
+    stopMessagePolling() {
+        if (this.pollingInterval) {
+            clearInterval(this.pollingInterval);
+            this.pollingInterval = null;
+            console.log('⏹️ Message polling stopped');
         }
+    }
+
+    // Enhanced notification system
+    showEnhancedNotification(message, conversation) {
+        // Create a more sophisticated notification
+        const notificationData = {
+            id: `notif_${Date.now()}`,
+            title: `New message from ${message.senderName}`,
+            body: message.content.length > 100 ? message.content.substring(0, 100) + '...' : message.content,
+            icon: '/Elyx.png',
+            badge: '/Elyx.png',
+            tag: 'elyx-message',
+            data: {
+                conversationId: conversation.id,
+                messageId: message.id,
+                senderId: message.senderId,
+                timestamp: message.timestamp
+            },
+            actions: [
+                {
+                    action: 'reply',
+                    title: 'Reply',
+                    icon: '/reply-icon.png'
+                },
+                {
+                    action: 'view',
+                    title: 'View Conversation',
+                    icon: '/view-icon.png'
+                }
+            ],
+            requireInteraction: message.metadata.priority === 'urgent',
+            silent: false,
+            vibrate: message.metadata.priority === 'urgent' ? [200, 100, 200] : [100]
+        };
+
+        // Store enhanced notification data
+        const enhancedNotifications = JSON.parse(localStorage.getItem('elyx_enhanced_notifications') || '[]');
+        enhancedNotifications.unshift(notificationData);
+        enhancedNotifications.splice(20); // Keep last 20 notifications
+        localStorage.setItem('elyx_enhanced_notifications', JSON.stringify(enhancedNotifications));
+
+        // Show browser notification if permission granted
+        if ('Notification' in window && Notification.permission === 'granted') {
+            const notification = new Notification(notificationData.title, {
+                body: notificationData.body,
+                icon: notificationData.icon,
+                badge: notificationData.badge,
+                tag: notificationData.tag,
+                data: notificationData.data,
+                requireInteraction: notificationData.requireInteraction,
+                silent: notificationData.silent,
+                vibrate: notificationData.vibrate
+            });
+
+            // Handle notification clicks
+            notification.onclick = function(event) {
+                event.preventDefault();
+                window.focus();
+                
+                // Dispatch event to open conversation
+                window.dispatchEvent(new CustomEvent('openConversation', {
+                    detail: {
+                        conversationId: conversation.id,
+                        messageId: message.id
+                    }
+                }));
+            };
+        }
+
+        // Show in-app notification toast
+        this.showInAppNotification(notificationData);
+    }
+
+    // Show in-app notification toast
+    showInAppNotification(notificationData) {
+        // Create toast notification element
+        const toast = document.createElement('div');
+        toast.className = 'elyx-notification-toast';
+        toast.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: ${notificationData.data.priority === 'urgent' ? '#ff4757' : '#667eea'};
+            color: white;
+            padding: 16px 20px;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            z-index: 10000;
+            max-width: 400px;
+            animation: slideInRight 0.3s ease;
+            cursor: pointer;
+            border-left: 4px solid ${notificationData.data.priority === 'urgent' ? '#ff6b7a' : '#764ba2'};
+        `;
+
+        toast.innerHTML = `
+            <div style="display: flex; align-items: flex-start; gap: 12px;">
+                <div style="flex: 1;">
+                    <div style="font-weight: 600; margin-bottom: 4px; font-size: 0.95rem;">
+                        ${notificationData.title}
+                    </div>
+                    <div style="font-size: 0.85rem; opacity: 0.9; line-height: 1.4;">
+                        ${notificationData.body}
+                    </div>
+                    <div style="font-size: 0.75rem; opacity: 0.7; margin-top: 6px;">
+                        ${new Date(notificationData.data.timestamp).toLocaleTimeString()}
+                    </div>
+                </div>
+                <button onclick="this.parentElement.parentElement.remove()" style="
+                    background: none; border: none; color: white; cursor: pointer; 
+                    padding: 4px; border-radius: 4px; opacity: 0.7; hover: opacity: 1;
+                ">×</button>
+            </div>
+        `;
+
+        // Add click handler to open conversation
+        toast.addEventListener('click', (e) => {
+            if (e.target.tagName !== 'BUTTON') {
+                window.dispatchEvent(new CustomEvent('openConversation', {
+                    detail: {
+                        conversationId: notificationData.data.conversationId,
+                        messageId: notificationData.data.messageId
+                    }
+                }));
+                toast.remove();
+            }
+        });
+
+        document.body.appendChild(toast);
+
+        // Auto-remove after 8 seconds (or 15 seconds for urgent messages)
+        const autoRemoveTime = notificationData.data.priority === 'urgent' ? 15000 : 8000;
+        setTimeout(() => {
+            if (toast.parentElement) {
+                toast.style.animation = 'slideOutRight 0.3s ease';
+                setTimeout(() => toast.remove(), 300);
+            }
+        }, autoRemoveTime);
     }
 
     // Get recent messages for dashboard
