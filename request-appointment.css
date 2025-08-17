@@ -8,7 +8,7 @@
 
 body {
     font-family: 'Inter', sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #ff8c00 0%, #ff6b35 100%);
     min-height: 100vh;
     color: #333;
 }
@@ -37,7 +37,7 @@ body {
     gap: 0.5rem;
     font-size: 1.5rem;
     font-weight: 700;
-    color: #667eea;
+    color: #ff8c00;
 }
 
 .logo i {
@@ -57,7 +57,7 @@ body {
 }
 
 .back-btn {
-    background: #667eea;
+    background: #ff8c00;
     color: white;
     border: none;
     padding: 0.5rem 1rem;
@@ -71,7 +71,7 @@ body {
 }
 
 .back-btn:hover {
-    background: #5a6fd8;
+    background: #e67e00;
 }
 
 /* Main Content */
@@ -137,7 +137,7 @@ body {
 }
 
 .calendar-nav-btn {
-    background: #667eea;
+    background: #ff8c00;
     color: white;
     border: none;
     width: 40px;
@@ -151,7 +151,7 @@ body {
 }
 
 .calendar-nav-btn:hover {
-    background: #5a6fd8;
+    background: #e67e00;
 }
 
 .calendar-header h2 {
@@ -170,7 +170,7 @@ body {
 .weekday {
     text-align: center;
     font-weight: 600;
-    color: #667eea;
+    color: #ff8c00;
     padding: 0.5rem;
     font-size: 0.9rem;
 }
@@ -212,9 +212,9 @@ body {
 }
 
 .calendar-day.selected {
-    background: #667eea;
+    background: #ff8c00;
     color: white;
-    border: 2px solid #5a6fd8;
+    border: 2px solid #e67e00;
     transform: scale(1.05);
 }
 
@@ -256,8 +256,8 @@ body {
 }
 
 .legend-color.selected {
-    background: #667eea;
-    border-color: #5a6fd8;
+    background: #ff8c00;
+    border-color: #e67e00;
 }
 
 .legend-color.unavailable {
@@ -304,16 +304,16 @@ body {
 }
 
 .time-slot:hover {
-    background: #667eea;
+    background: #ff8c00;
     color: white;
-    border-color: #5a6fd8;
+    border-color: #e67e00;
     transform: translateY(-2px);
 }
 
 .time-slot.selected {
-    background: #667eea;
+    background: #ff8c00;
     color: white;
-    border-color: #5a6fd8;
+    border-color: #e67e00;
 }
 
 .time-slot.unavailable {
@@ -381,7 +381,7 @@ body {
 .form-group select:focus,
 .form-group textarea:focus {
     outline: none;
-    border-color: #667eea;
+    border-color: #ff8c00;
 }
 
 .form-group textarea {
@@ -425,8 +425,8 @@ body {
 }
 
 .radio-label input[type="radio"]:checked + .radio-custom {
-    border-color: #667eea;
-    background: #667eea;
+    border-color: #ff8c00;
+    background: #ff8c00;
 }
 
 .radio-label input[type="radio"]:checked + .radio-custom::after {
@@ -442,8 +442,8 @@ body {
 }
 
 .checkbox-label input[type="checkbox"]:checked + .checkbox-custom {
-    border-color: #667eea;
-    background: #667eea;
+    border-color: #ff8c00;
+    background: #ff8c00;
 }
 
 .checkbox-label input[type="checkbox"]:checked + .checkbox-custom::after {
@@ -518,12 +518,12 @@ body {
 }
 
 .btn-primary {
-    background: #667eea;
+    background: #ff8c00;
     color: white;
 }
 
 .btn-primary:hover:not(:disabled) {
-    background: #5a6fd8;
+    background: #e67e00;
     transform: translateY(-2px);
 }
 
@@ -640,7 +640,7 @@ body {
 }
 
 .footer-section h4 {
-    color: #667eea;
+    color: #ff8c00;
     margin-bottom: 1rem;
     font-size: 1.1rem;
 }
