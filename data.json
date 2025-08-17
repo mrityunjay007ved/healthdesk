@@ -53,8 +53,7 @@
       "name": "Wei Chen",
       "createdAt": "2024-08-15T11:00:00.000Z",
       "lastLogin": "2024-08-15T11:00:00.000Z"
-    },
-
+    }
   ],
   "loginHistory": [
     {
@@ -196,7 +195,33 @@
     },
     {
       "id": "med_3",
-      "patientId": 3,
+      "patientId": 2,
+      "name": "Amlodipine",
+      "dosage": "5mg",
+      "frequency": "Daily",
+      "instructions": "Take daily for blood pressure control",
+      "startDate": "2025-01-03T00:00:00.000Z",
+      "endDate": null,
+      "status": "active",
+      "prescribedBy": 2,
+      "prescribedAt": "2025-01-03T00:00:00.000Z"
+    },
+    {
+      "id": "med_4",
+      "patientId": 2,
+      "name": "Escitalopram",
+      "dosage": "5mg",
+      "frequency": "Daily",
+      "instructions": "Take daily for anxiety management",
+      "startDate": "2025-01-05T00:00:00.000Z",
+      "endDate": null,
+      "status": "active",
+      "prescribedBy": 2,
+      "prescribedAt": "2025-01-05T00:00:00.000Z"
+    },
+    {
+      "id": "med_5",
+      "patientId": 2,
       "name": "Metformin",
       "dosage": "500mg",
       "frequency": "Daily",
@@ -208,8 +233,8 @@
       "prescribedAt": "2025-01-07T00:00:00.000Z"
     },
     {
-      "id": "med_4",
-      "patientId": 3,
+      "id": "med_6",
+      "patientId": 2,
       "name": "Glimepiride",
       "dosage": "1mg",
       "frequency": "Daily",
@@ -221,33 +246,46 @@
       "prescribedAt": "2025-01-07T00:00:00.000Z"
     },
     {
-      "id": "med_5",
-      "patientId": 4,
+      "id": "med_7",
+      "patientId": 2,
       "name": "Atorvastatin",
       "dosage": "10mg",
       "frequency": "Daily",
       "instructions": "Take at night for cholesterol management",
-      "startDate": "2024-01-26T00:00:00.000Z",
+      "startDate": "2025-01-09T00:00:00.000Z",
       "endDate": null,
       "status": "active",
       "prescribedBy": 2,
-      "prescribedAt": "2024-01-26T00:00:00.000Z"
+      "prescribedAt": "2025-01-09T00:00:00.000Z"
     },
     {
-      "id": "med_6",
-      "patientId": 4,
+      "id": "med_8",
+      "patientId": 3,
+      "name": "Atorvastatin",
+      "dosage": "10mg",
+      "frequency": "Daily",
+      "instructions": "Take daily for cholesterol management",
+      "startDate": "2025-01-26T00:00:00.000Z",
+      "endDate": null,
+      "status": "active",
+      "prescribedBy": 2,
+      "prescribedAt": "2025-01-26T00:00:00.000Z"
+    },
+    {
+      "id": "med_9",
+      "patientId": 3,
       "name": "Escitalopram",
       "dosage": "5mg",
       "frequency": "Daily",
-      "instructions": "Take in the morning for anxiety management",
-      "startDate": "2024-01-11T00:00:00.000Z",
+      "instructions": "Take daily for anxiety management",
+      "startDate": "2025-01-11T00:00:00.000Z",
       "endDate": null,
       "status": "active",
       "prescribedBy": 2,
-      "prescribedAt": "2024-01-11T00:00:00.000Z"
+      "prescribedAt": "2025-01-11T00:00:00.000Z"
     },
     {
-      "id": "med_7",
+      "id": "med_10",
       "patientId": 5,
       "name": "Lisinopril",
       "dosage": "10mg",
@@ -260,7 +298,7 @@
       "prescribedAt": "2024-02-01T00:00:00.000Z"
     },
     {
-      "id": "med_8",
+      "id": "med_11",
       "patientId": 5,
       "name": "Amlodipine",
       "dosage": "5mg",
@@ -273,7 +311,7 @@
       "prescribedAt": "2024-02-01T00:00:00.000Z"
     },
     {
-      "id": "med_9",
+      "id": "med_12",
       "patientId": 6,
       "name": "Simvastatin",
       "dosage": "20mg",
@@ -286,7 +324,7 @@
       "prescribedAt": "2024-01-20T00:00:00.000Z"
     },
     {
-      "id": "med_10",
+      "id": "med_13",
       "patientId": 6,
       "name": "Vitamin B12",
       "dosage": "1000mcg",
@@ -297,8 +335,7 @@
       "status": "active",
       "prescribedBy": 2,
       "prescribedAt": "2024-01-20T00:00:00.000Z"
-    },
-
+    }
   ],
   "settings": {
     "maxLoginAttempts": 5,

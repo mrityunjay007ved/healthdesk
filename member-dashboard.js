@@ -16,7 +16,7 @@ function navigateTo(page) {
                 window.location.href = 'current-plan.html';
                 break;
             case 'request-appointment':
-                showNotification('Request Appointment page coming soon!', 'info');
+                window.location.href = 'request-appointment.html';
                 break;
             case 'emergency':
                 showNotification('Emergency Contact: 911', 'info');
@@ -233,24 +233,32 @@ function getCurrentMember() {
 
 function toggleChat() {
     const chatInterface = document.getElementById('chatInterface');
+    
+    // Simple toggle without animations to prevent flickering
     chatOpen = !chatOpen;
     
     if (chatOpen) {
+        // Show chat immediately
         chatInterface.style.display = 'block';
+        chatInterface.style.opacity = '1';
+        chatInterface.style.transform = 'none';
+        chatInterface.classList.add('show');
+        
         initializeMemberChat();
-        setTimeout(() => {
-            chatInterface.classList.add('show');
-        }, 10);
     } else {
+        // Hide chat immediately
+        chatInterface.style.display = 'none';
+        chatInterface.style.opacity = '1';
+        chatInterface.style.transform = 'none';
         chatInterface.classList.remove('show');
-        setTimeout(() => {
-            chatInterface.style.display = 'none';
-        }, 300);
     }
 }
 
 function initializeMemberChat() {
     if (memberChatInitialized) return;
+    
+    // Simple initialization without complex guards
+    memberChatInitialized = true;
     
     const member = getCurrentMember();
     if (!member || member.userType !== 'member') {
@@ -314,7 +322,6 @@ function initializeMemberChat() {
     loadMemberConversation();
     updateMemberUnreadBadge();
     
-    memberChatInitialized = true;
     console.log('Member chat initialized');
 }
 

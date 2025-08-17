@@ -274,7 +274,7 @@ function loadPatientList() {
 }
 
 // Select patient and display timeline
-function selectPatient(patientId) {
+async function selectPatient(patientId) {
     // Remove previous selection
     document.querySelectorAll('.patient-card').forEach(card => {
         card.classList.remove('selected');
@@ -292,6 +292,11 @@ function selectPatient(patientId) {
     }
     
     selectedPatient = patient;
+    
+    // Ensure data manager is loaded with latest data
+    if (window.dataManager) {
+        await window.dataManager.loadData();
+    }
     
     // Get dynamic timeline events from localStorage
     const timelineKey = `patient_timeline_${patientId}`;
@@ -316,13 +321,18 @@ function selectPatient(patientId) {
     document.getElementById('timelineDisplay').style.display = 'block';
     
     // Load and display timeline
-    displayTimeline(patient);
+    await displayTimeline(patient);
 }
 
 // Display timeline for selected patient
-function displayTimeline(patient) {
+async function displayTimeline(patient) {
     const timeline = document.getElementById('timeline');
     const currentCondition = document.getElementById('currentCondition');
+    
+    // Ensure data manager is loaded with latest data
+    if (window.dataManager) {
+        await window.dataManager.loadData();
+    }
     
     // Get dynamic timeline events from localStorage
     const timelineKey = `patient_timeline_${patient.id}`;
@@ -382,8 +392,8 @@ function displayTimeline(patient) {
         </div>
     `;
     
-    // Display current condition
-    displayCurrentCondition(patient, sortedEvents);
+    // Display current condition with latest data
+    await displayCurrentCondition(patient, sortedEvents);
 }
 
 // Group events by type for better organization
@@ -440,25 +450,25 @@ function getEventSummary(event) {
 }
 
 // Display current condition
-function displayCurrentCondition(patient, events) {
+async function displayCurrentCondition(patient, events) {
     const currentCondition = document.getElementById('currentCondition');
+    
+    // Ensure data manager is loaded with latest data
+    if (window.dataManager) {
+        await window.dataManager.loadData();
+    }
     
     // Get latest event for assessment
     const latestEvent = events[events.length - 1]; // Get the most recent event
     
-    // Get current medications from data manager
+    // ALWAYS get current medications from data manager - this is the source of truth
+    console.log('🔍 Patient Timeline - Loading medications for patient ID:', patient.id);
+    console.log('📊 Patient Timeline - All medications in data manager:', window.dataManager?.data?.medications);
+    
     const dataManagerMedications = window.dataManager?.data?.medications?.filter(med => 
         med.patientId === patient.id && med.status === 'active'
     ) || [];
-    
-    // Get medications from the latest timeline event
-    const timelineMedications = latestEvent ? latestEvent.medications || [] : [];
-    
-    // Combine both sources - prioritize data manager medications if available
-    const currentMedications = dataManagerMedications.length > 0 ? dataManagerMedications : timelineMedications;
-    
-    // Update the current medications display to show the most recent data manager medications
-    const latestDataManagerMedications = dataManagerMedications.length > 0 ? dataManagerMedications : [];
+    console.log('💊 Patient Timeline - Filtered medications for patient:', dataManagerMedications);
     
     // Calculate timeline summary
     const totalEvents = events.length;
@@ -486,30 +496,16 @@ function displayCurrentCondition(patient, events) {
             </ul>
         </div>
         
-        ${currentMedications.length > 0 ? `
+        ${dataManagerMedications.length > 0 ? `
             <div class="current-medications">
                 <h4><i class="fas fa-pills"></i> Current Medications</h4>
                 <div class="medication-list">
-                    ${currentMedications.map(med => {
-                        if (typeof med === 'string') {
-                            // Handle timeline medication format
-                            const [name, details] = med.split(' - ');
-                            return `
-                                <div class="current-medication-item">
-                                    <div class="medication-name">${name}</div>
-                                    <div class="medication-details">${details}</div>
-                                </div>
-                            `;
-                        } else {
-                            // Handle data manager medication format
-                            return `
-                                <div class="current-medication-item">
-                                    <div class="medication-name">${med.name} ${med.dosage}</div>
-                                    <div class="medication-details">${med.frequency} - ${med.instructions}</div>
-                                </div>
-                            `;
-                        }
-                    }).join('')}
+                    ${dataManagerMedications.map(med => `
+                        <div class="current-medication-item">
+                            <div class="medication-name">${med.name} ${med.dosage}</div>
+                            <div class="medication-details">${med.frequency} - ${med.instructions}</div>
+                        </div>
+                    `).join('')}
                 </div>
             </div>
         ` : '<p><em>No active medications</em></p>'}
@@ -526,7 +522,12 @@ function openPatientTimeline() {
 }
 
 // Initialize the page
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+    // Ensure data manager is loaded
+    if (window.dataManager) {
+        await window.dataManager.loadData();
+    }
+    
     // Load patient list
     loadPatientList();
     
@@ -540,6 +541,17 @@ document.addEventListener('DOMContentLoaded', () => {
             selectPatient(parseInt(patientId));
         }, 500);
     }
+    
+    // Listen for medication updates from other tabs
+    window.addEventListener('storage', (event) => {
+        if (event.key === 'healthdesk_data' && selectedPatient) {
+            console.log('🔄 Medication update detected, refreshing timeline...');
+            // Refresh the current patient's timeline
+            setTimeout(() => {
+                displayTimeline(selectedPatient);
+            }, 100);
+        }
+    });
 });
 
 // Conversation Modal Functions

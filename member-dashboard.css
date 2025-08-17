@@ -609,11 +609,12 @@ body {
     margin: 32px 0;
     overflow: hidden;
     box-shadow: 0 8px 32px rgba(102, 126, 234, 0.1);
-    transition: all 0.3s ease;
+    display: none;
+    /* Removed all transitions and animations to prevent flickering */
 }
 
 .chat-interface.show {
-    transform: translateY(0);
+    display: block;
 }
 
 .chat-header {
@@ -640,7 +641,7 @@ body {
     border-radius: 8px;
     padding: 8px;
     cursor: pointer;
-    transition: all 0.2s ease;
+    /* Removed transition to prevent flickering */
 }
 
 .close-chat-btn:hover {
@@ -896,7 +897,7 @@ body {
 .member-message {
     display: flex;
     margin-bottom: 16px;
-    animation: fadeInUp 0.3s ease;
+    /* Removed animation to prevent flickering */
 }
 
 .member-message.sent {
@@ -947,16 +948,7 @@ body {
     color: #666;
 }
 
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
+/* Removed fadeInUp animation to prevent flickering */
 
 @keyframes pulse {
     0%, 100% {

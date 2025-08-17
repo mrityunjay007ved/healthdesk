@@ -280,6 +280,7 @@ function toggleChatContainer(show = null) {
 	
 	if (show === null) show = !isVisible;
 	
+	// Simple toggle without animations to prevent flickering
 	container.style.display = show ? 'flex' : 'none';
 	
 	if (show && !chatInitialized) {
@@ -1221,8 +1222,12 @@ function openMedicationsModal(patientId) {
         return;
     }
     
-    // Load patient medications from data manager
-    const medications = window.dataManager?.data?.medications?.filter(med => med.patientId === patientId) || [];
+    // Load patient medications from data manager - only active medications
+    console.log('🔍 Loading medications for patient ID:', patientId);
+    console.log('📊 All medications in data manager:', window.dataManager?.data?.medications);
+    
+    const medications = window.dataManager?.data?.medications?.filter(med => med.patientId === patientId && med.status === 'active') || [];
+    console.log('💊 Filtered medications for patient:', medications);
     
     // Display medications in a modal
     const modal = document.createElement('div');

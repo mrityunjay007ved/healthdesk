@@ -87,7 +87,7 @@
     border-radius: 8px;
     padding: 8px 12px;
     cursor: pointer;
-    transition: all 0.2s ease;
+    /* Removed transition to prevent flickering */
 }
 
 .toggle-chat-btn:hover {
@@ -153,7 +153,7 @@
     border-radius: 8px;
     cursor: pointer;
     margin-bottom: 4px;
-    transition: all 0.2s ease;
+    /* Removed transition to prevent flickering */
     position: relative;
 }
 
@@ -327,7 +327,7 @@
 .message {
     display: flex;
     margin-bottom: 16px;
-    animation: fadeInUp 0.3s ease;
+    /* Removed animation to prevent flickering */
 }
 
 .message.sent {
@@ -617,17 +617,7 @@
     margin-top: 16px;
 }
 
-/* Animations */
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
+/* Removed fadeInUp animation to prevent flickering */
 
 @keyframes pulse {
     0%, 100% {

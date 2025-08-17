@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HealthDesk - Request Appointment</title>
+    <link rel="stylesheet" href="request-appointment.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>❤️</text></svg>">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <i class="fas fa-heartbeat"></i>
+                <span>HealthDesk</span>
+            </div>
+            <div class="user-info">
+                <span class="welcome-text">Welcome, Member</span>
+                <button class="back-btn" onclick="goBack()">
+                    <i class="fas fa-arrow-left"></i>
+                    Back to Dashboard
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="page-header">
+                <h1><i class="fas fa-calendar-plus"></i> Request Appointment</h1>
+                <p>Select your preferred date and time for your appointment</p>
+            </div>
+
+            <div class="appointment-container">
+                <!-- Calendar Section -->
+                <div class="calendar-section">
+                    <div class="calendar-header">
+                        <button class="calendar-nav-btn" onclick="previousMonth()">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <h2 id="currentMonth">January 2024</h2>
+                        <button class="calendar-nav-btn" onclick="nextMonth()">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+
+                    <div class="calendar-weekdays">
+                        <div class="weekday">Sun</div>
+                        <div class="weekday">Mon</div>
+                        <div class="weekday">Tue</div>
+                        <div class="weekday">Wed</div>
+                        <div class="weekday">Thu</div>
+                        <div class="weekday">Fri</div>
+                        <div class="weekday">Sat</div>
+                    </div>
+
+                    <div class="calendar-grid" id="calendarGrid">
+                        <!-- Calendar days will be populated here -->
+                    </div>
+
+                    <div class="calendar-legend">
+                        <div class="legend-item">
+                            <div class="legend-color available"></div>
+                            <span>Available</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color selected"></div>
+                            <span>Selected</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color unavailable"></div>
+                            <span>Unavailable</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Time Slots Section -->
+                <div class="time-slots-section">
+                    <h3>Available Time Slots</h3>
+                    <p id="selectedDateText">Select a date to view available times</p>
+                    
+                    <div class="time-slots-grid" id="timeSlotsGrid">
+                        <!-- Time slots will be populated here -->
+                    </div>
+
+                    <div class="no-slots-message" id="noSlotsMessage" style="display: none;">
+                        <i class="fas fa-calendar-times"></i>
+                        <p>No available slots for this date</p>
+                        <p>Please select another date</p>
+                    </div>
+                </div>
+
+                <!-- Appointment Details Section -->
+                <div class="appointment-details-section">
+                    <h3>Appointment Details</h3>
+                    
+                    <form id="appointmentForm" class="appointment-form">
+                        <div class="form-group">
+                            <label for="appointmentType">Appointment Type</label>
+                            <select id="appointmentType" required>
+                                <option value="">Select appointment type</option>
+                                <option value="general">General Consultation</option>
+                                <option value="follow-up">Follow-up Visit</option>
+                                <option value="emergency">Emergency Visit</option>
+                                <option value="specialist">Specialist Consultation</option>
+                                <option value="routine">Routine Check-up</option>
+                                <option value="vaccination">Vaccination</option>
+                                <option value="lab-work">Lab Work</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="preferredDoctor">Preferred Doctor</label>
+                            <select id="preferredDoctor" required>
+                                <option value="">Select preferred doctor</option>
+                                <option value="dr-jane-smith">Dr. Jane Smith (General Medicine)</option>
+                                <option value="dr-michael-brown">Dr. Michael Brown (Cardiology)</option>
+                                <option value="dr-sarah-johnson">Dr. Sarah Johnson (Pediatrics)</option>
+                                <option value="dr-david-wilson">Dr. David Wilson (Orthopedics)</option>
+                                <option value="any">Any Available Doctor</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="appointmentReason">Reason for Visit</label>
+                            <textarea id="appointmentReason" rows="4" placeholder="Please describe your symptoms or reason for the appointment..." required></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="urgencyLevel">Urgency Level</label>
+                            <select id="urgencyLevel" required>
+                                <option value="">Select urgency level</option>
+                                <option value="routine">Routine - Can wait a few days</option>
+                                <option value="urgent">Urgent - Within 24-48 hours</option>
+                                <option value="emergency">Emergency - Same day</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="contactPhone">Contact Phone</label>
+                            <input type="tel" id="contactPhone" placeholder="Enter your phone number" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="preferredContact">Preferred Contact Method</label>
+                            <div class="radio-group">
+                                <label class="radio-label">
+                                    <input type="radio" name="contactMethod" value="phone" checked>
+                                    <span class="radio-custom"></span>
+                                    Phone Call
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="contactMethod" value="email">
+                                    <span class="radio-custom"></span>
+                                    Email
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="contactMethod" value="sms">
+                                    <span class="radio-custom"></span>
+                                    SMS
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="insuranceCheck" required>
+                                <span class="checkbox-custom"></span>
+                                I confirm that I have valid health insurance coverage
+                            </label>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="termsCheck" required>
+                                <span class="checkbox-custom"></span>
+                                I agree to the <a href="#" onclick="showTerms()">terms and conditions</a>
+                            </label>
+                        </div>
+
+                        <div class="appointment-summary" id="appointmentSummary" style="display: none;">
+                            <h4>Appointment Summary</h4>
+                            <div class="summary-item">
+                                <span class="summary-label">Date:</span>
+                                <span class="summary-value" id="summaryDate">-</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-label">Time:</span>
+                                <span class="summary-value" id="summaryTime">-</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-label">Type:</span>
+                                <span class="summary-value" id="summaryType">-</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-label">Doctor:</span>
+                                <span class="summary-value" id="summaryDoctor">-</span>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="btn-secondary" onclick="resetForm()">
+                                <i class="fas fa-undo"></i>
+                                Reset Form
+                            </button>
+                            <button type="submit" class="btn-primary" id="submitBtn" disabled>
+                                <i class="fas fa-paper-plane"></i>
+                                Submit Request
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Success Modal -->
+            <div class="modal" id="successModal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3><i class="fas fa-check-circle"></i> Appointment Request Submitted</h3>
+                    </div>
+                    <div class="modal-body">
+                        <p>Your appointment request has been successfully submitted!</p>
+                        <div class="appointment-details">
+                            <p><strong>Request ID:</strong> <span id="requestId">-</span></p>
+                            <p><strong>Date:</strong> <span id="modalDate">-</span></p>
+                            <p><strong>Time:</strong> <span id="modalTime">-</span></p>
+                            <p><strong>Type:</strong> <span id="modalType">-</span></p>
+                        </div>
+                        <p>You will receive a confirmation within 24 hours. Please check your email or phone for updates.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn-primary" onclick="closeSuccessModal()">
+                            <i class="fas fa-check"></i>
+                            OK
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>HealthDesk</h4>
+                    <p>Empowering better healthcare through technology</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact</h4>
+                    <p><i class="fas fa-phone"></i> (555) 123-4567</p>
+                    <p><i class="fas fa-envelope"></i> appointments@healthdesk.com</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 HealthDesk. All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="request-appointment.js"></script>
+</body>
+</html>
