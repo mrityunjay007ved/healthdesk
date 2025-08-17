@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HealthDesk - Patient Timeline</title>
+    <link rel="stylesheet" href="patient-timeline.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>❤️</text></svg>">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <div class="logo">
+                    <i class="fas fa-heartbeat"></i>
+                    <span>HealthDesk</span>
+                </div>
+                <div class="user-info">
+                    <div class="user-name" id="userName">Doctor</div>
+                    <div class="user-email" id="userEmail"></div>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button class="back-btn" onclick="goBack()">
+                    <i class="fas fa-arrow-left"></i>
+                    Back
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="dashboard-header">
+                <h1>Patient Timeline</h1>
+                <p>8-Month Digital Health Monitoring - Prescription Changes & Medical History</p>
+            </div>
+
+            <!-- Patient Selection -->
+            <section class="patient-selection">
+                <div class="section-header">
+                    <h2><i class="fas fa-user"></i> Select Patient</h2>
+                </div>
+                <div class="patient-list" id="patientList">
+                    <!-- Filled by JS -->
+                </div>
+            </section>
+
+            <!-- Timeline Display -->
+            <section class="timeline-display" id="timelineDisplay" style="display: none;">
+                <div class="section-header">
+                    <h2><i class="fas fa-clock"></i> Patient Timeline</h2>
+                    <div class="patient-info" id="selectedPatientInfo">
+                        <!-- Patient info will be displayed here -->
+                    </div>
+                </div>
+                
+                <div class="timeline-container">
+                    <div class="timeline" id="timeline">
+                        <!-- Timeline events will be displayed here -->
+                    </div>
+                    
+                    <div class="current-condition" id="currentCondition">
+                        <!-- Current condition will be displayed here -->
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-bottom">
+                <p>&copy; 2024 HealthDesk. All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
+
+                    </div>
+            </main>
+
+            <!-- Conversation Modal -->
+            <div id="conversationModal" class="conversation-modal">
+                <div class="conversation-modal-content">
+                    <div class="conversation-modal-header">
+                        <h3 class="conversation-modal-title" id="conversationModalTitle">Patient Conversation</h3>
+                        <button class="close-conversation" onclick="closeConversationModal()">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="conversation-content" id="conversationModalContent">
+                        <!-- Conversation content will be displayed here -->
+                    </div>
+                </div>
+            </div>
+
+            <script src="data-manager.js"></script>
+            <script src="patient-timeline.js"></script>
+        </body>
+        </html>

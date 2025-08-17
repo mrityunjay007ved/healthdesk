@@ -741,3 +741,49 @@
         justify-content: center;
     }
 }
+
+/* Patient Timeline Section */
+.timeline-section {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.1);
+    margin-bottom: 30px;
+    border-left: 4px solid #ff6b35;
+}
+
+.timeline-content {
+    margin-top: 20px;
+}
+
+.timeline-content p {
+    color: white;
+    line-height: 1.6;
+    font-size: 1rem;
+    margin-bottom: 20px;
+}
+
+.timeline-features {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.feature-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 10px 15px;
+    border-radius: 8px;
+    color: black;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.feature-item i {
+    color: #ff6b35;
+    font-size: 1rem;
+}

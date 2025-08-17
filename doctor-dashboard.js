@@ -99,11 +99,14 @@ function handlePatientAction(action){
 	const id = document.getElementById('patientModal').dataset.patientId;
 	if (!id) return;
 	if (action === 'plan') window.location.href = `current-plan.html?patientId=${encodeURIComponent(id)}`;
-	if (action === 'query') alert('Member Current Query - coming soon');
 	if (action === 'report') window.location.href = `health-report.html?view=doctor&patientId=${encodeURIComponent(id)}`;
 	if (action === 'chat') {
 		closePatientModal();
 		startConversationWithPatient(id);
+	}
+	if (action === 'medications') {
+		closePatientModal();
+		openMedicationsModal(id);
 	}
 }
 
@@ -1202,4 +1205,248 @@ function handleDoctorPollingUpdate(event) {
 	} catch (error) {
 		console.error('❌ Error processing doctor polling update:', error);
 	}
+}
+
+// Patient Timeline Functions
+function openPatientTimeline() {
+    window.location.href = 'patient-timeline.html';
+    console.log('🕒 Opening patient timeline...');
+}
+
+// Current Medications Functions
+function openMedicationsModal(patientId) {
+    const patient = getPatientById(patientId);
+    if (!patient) {
+        toast('Patient not found', 'error');
+        return;
+    }
+    
+    // Load patient medications from data manager
+    const medications = window.dataManager?.data?.medications?.filter(med => med.patientId === patientId) || [];
+    
+    // Display medications in a modal
+    const modal = document.createElement('div');
+    modal.className = 'modal show';
+    modal.innerHTML = `
+        <div class="modal-content" style="max-width: 900px; width: 90%;">
+            <div class="modal-header">
+                <h3>Current Medications - ${patient.name}</h3>
+                <button class="modal-close" onclick="this.closest('.modal').remove()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="medications-container">
+                    ${medications.length > 0 ? `
+                        <div class="medications-list">
+                            ${medications.map(med => `
+                                <div class="medication-item" style="background: #f8f9fa; border-radius: 12px; padding: 20px; margin-bottom: 20px; border-left: 4px solid #667eea;">
+                                    <div class="medication-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                                        <h4 style="margin: 0; color: #333; font-size: 1.2rem;">${med.name}</h4>
+                                        <span class="medication-status ${med.status}" style="background: ${med.status === 'active' ? '#28a745' : '#dc3545'}; color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem;">${med.status}</span>
+                                    </div>
+                                    <div class="medication-details" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                                        <div>
+                                            <p style="margin: 5px 0;"><strong>Dosage:</strong> ${med.dosage}</p>
+                                            <p style="margin: 5px 0;"><strong>Frequency:</strong> ${med.frequency}</p>
+                                        </div>
+                                        <div>
+                                            <p style="margin: 5px 0;"><strong>Start Date:</strong> ${new Date(med.startDate).toLocaleDateString()}</p>
+                                            ${med.endDate ? `<p style="margin: 5px 0;"><strong>End Date:</strong> ${new Date(med.endDate).toLocaleDateString()}</p>` : ''}
+                                        </div>
+                                    </div>
+                                    <div style="margin-bottom: 15px;">
+                                        <p style="margin: 5px 0;"><strong>Instructions:</strong> ${med.instructions}</p>
+                                    </div>
+                                    <div class="medication-actions" style="display: flex; gap: 10px;">
+                                        <button class="btn secondary" onclick="editMedication('${med.id}')" style="padding: 8px 16px;">Edit</button>
+                                        <button class="btn danger" onclick="discontinueMedication('${med.id}')" style="padding: 8px 16px;">Discontinue</button>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="add-medication-section" style="background: #e9ecef; border-radius: 12px; padding: 20px; margin-top: 20px;">
+                            <h4 style="margin-bottom: 20px; color: #333;">Add New Medication</h4>
+                            <form id="addMedicationForm">
+                                <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                                    <input type="text" id="medName" placeholder="Medication Name" required style="padding: 12px; border: 1px solid #ddd; border-radius: 6px; width: 100%;">
+                                    <input type="text" id="medDosage" placeholder="Dosage" required style="padding: 12px; border: 1px solid #ddd; border-radius: 6px; width: 100%;">
+                                </div>
+                                <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                                    <select id="medFrequency" required style="padding: 12px; border: 1px solid #ddd; border-radius: 6px; width: 100%;">
+                                        <option value="">Select Frequency</option>
+                                        <option value="Daily">Daily</option>
+                                        <option value="Twice daily">Twice daily</option>
+                                        <option value="Three times daily">Three times daily</option>
+                                        <option value="Weekly">Weekly</option>
+                                        <option value="As needed">As needed</option>
+                                        <option value="Every 4 hours">Every 4 hours</option>
+                                        <option value="Every 6 hours">Every 6 hours</option>
+                                        <option value="Every 8 hours">Every 8 hours</option>
+                                        <option value="Every 12 hours">Every 12 hours</option>
+                                    </select>
+                                    <textarea id="medInstructions" placeholder="Instructions" rows="3" style="padding: 12px; border: 1px solid #ddd; border-radius: 6px; width: 100%; resize: vertical;"></textarea>
+                                </div>
+                                <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
+                                    <input type="date" id="medStartDate" required style="padding: 12px; border: 1px solid #ddd; border-radius: 6px; width: 100%;">
+                                    <input type="date" id="medEndDate" placeholder="End Date (optional)" style="padding: 12px; border: 1px solid #ddd; border-radius: 6px; width: 100%;">
+                                </div>
+                                <button type="submit" class="btn primary" style="padding: 12px 24px; background: #667eea; color: white; border: none; border-radius: 6px; cursor: pointer;">Add Medication</button>
+                            </form>
+                        </div>
+                    ` : `
+                        <div class="no-medications" style="text-align: center; padding: 40px;">
+                            <p style="font-size: 1.1rem; color: #666; margin-bottom: 20px;">No medications found for this patient.</p>
+                            <div class="add-medication-section" style="background: #e9ecef; border-radius: 12px; padding: 20px; margin-top: 20px;">
+                                <h4 style="margin-bottom: 20px; color: #333;">Add New Medication</h4>
+                                <form id="addMedicationForm">
+                                    <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                                        <input type="text" id="medName" placeholder="Medication Name" required style="padding: 12px; border: 1px solid #ddd; border-radius: 6px; width: 100%;">
+                                        <input type="text" id="medDosage" placeholder="Dosage" required style="padding: 12px; border: 1px solid #ddd; border-radius: 6px; width: 100%;">
+                                    </div>
+                                    <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                                        <select id="medFrequency" required style="padding: 12px; border: 1px solid #ddd; border-radius: 6px; width: 100%;">
+                                            <option value="">Select Frequency</option>
+                                            <option value="Daily">Daily</option>
+                                            <option value="Twice daily">Twice daily</option>
+                                            <option value="Three times daily">Three times daily</option>
+                                            <option value="Weekly">Weekly</option>
+                                            <option value="As needed">As needed</option>
+                                            <option value="Every 4 hours">Every 4 hours</option>
+                                            <option value="Every 6 hours">Every 6 hours</option>
+                                            <option value="Every 8 hours">Every 8 hours</option>
+                                            <option value="Every 12 hours">Every 12 hours</option>
+                                        </select>
+                                        <textarea id="medInstructions" placeholder="Instructions" rows="3" style="padding: 12px; border: 1px solid #ddd; border-radius: 6px; width: 100%; resize: vertical;"></textarea>
+                                    </div>
+                                    <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
+                                        <input type="date" id="medStartDate" required style="padding: 12px; border: 1px solid #ddd; border-radius: 6px; width: 100%;">
+                                        <input type="date" id="medEndDate" placeholder="End Date (optional)" style="padding: 12px; border: 1px solid #ddd; border-radius: 6px; width: 100%;">
+                                    </div>
+                                    <button type="submit" class="btn primary" style="padding: 12px 24px; background: #667eea; color: white; border: none; border-radius: 6px; cursor: pointer;">Add Medication</button>
+                                </form>
+                            </div>
+                        </div>
+                    `}
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    // Handle form submission
+    document.getElementById('addMedicationForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        handleAddMedication(patientId);
+    });
+    
+    console.log('💊 Opened medications modal for patient:', patient.name);
+}
+
+function handleAddMedication(patientId) {
+    const formData = {
+        name: document.getElementById('medName').value,
+        dosage: document.getElementById('medDosage').value,
+        frequency: document.getElementById('medFrequency').value,
+        instructions: document.getElementById('medInstructions').value,
+        startDate: document.getElementById('medStartDate').value,
+        endDate: document.getElementById('medEndDate').value || null,
+        status: 'active',
+        patientId: patientId,
+        prescribedBy: getCurrentUser().id,
+        prescribedAt: new Date().toISOString()
+    };
+    
+    // Add to data manager
+    if (window.dataManager) {
+        const newMedication = {
+            id: 'med_' + Date.now(),
+            ...formData
+        };
+        
+        if (!window.dataManager.data.medications) {
+            window.dataManager.data.medications = [];
+        }
+        
+        window.dataManager.data.medications.push(newMedication);
+        window.dataManager.saveData();
+        
+        // Add medication change to timeline
+        addMedicationChangeToTimeline(newMedication, 'added');
+        
+        toast('Medication added successfully', 'success');
+        
+        // Refresh the modal
+        const modal = document.querySelector('.modal.show');
+        if (modal) {
+            modal.remove();
+            openMedicationsModal(patientId);
+        }
+    }
+}
+
+function addMedicationChangeToTimeline(medication, action) {
+    console.log(`💊 Medication ${action}: ${medication.name} for patient ${medication.patientId}`);
+    
+    // Get patient info
+    const patient = getPatientById(medication.patientId);
+    if (!patient) {
+        console.error('Patient not found for timeline update');
+        return;
+    }
+    
+    // Create timeline event
+    const timelineEvent = {
+        date: new Date().toISOString().split('T')[0],
+        title: action === 'added' ? 'Medication Added' : 'Medication Discontinued',
+        content: action === 'added' 
+            ? `New medication prescribed: ${medication.name} ${medication.dosage} ${medication.frequency}`
+            : `Medication discontinued: ${medication.name}`,
+        medications: action === 'added' 
+            ? [`${medication.name} ${medication.dosage} - ${medication.frequency}`]
+            : [],
+        conversation: action === 'added'
+            ? `Doctor: "I'm prescribing ${medication.name} ${medication.dosage} ${medication.frequency} for your condition."\n\nPatient: "Thank you, doctor. When should I take it?"\n\nDoctor: "${medication.instructions}"`
+            : `Doctor: "We're discontinuing ${medication.name} as it's no longer needed."\n\nPatient: "Understood, thank you."`
+    };
+    
+    // Store timeline event in localStorage for persistence
+    const timelineKey = `patient_timeline_${medication.patientId}`;
+    let patientTimeline = JSON.parse(localStorage.getItem(timelineKey) || '[]');
+    patientTimeline.push(timelineEvent);
+    localStorage.setItem(timelineKey, JSON.stringify(patientTimeline));
+    
+    console.log('✅ Timeline event added:', timelineEvent);
+}
+
+function editMedication(medicationId) {
+    // Implementation for editing medication
+    toast('Edit medication functionality coming soon', 'info');
+}
+
+function discontinueMedication(medicationId) {
+    if (confirm('Are you sure you want to discontinue this medication?')) {
+        if (window.dataManager) {
+            const medication = window.dataManager.data.medications.find(med => med.id === medicationId);
+            if (medication) {
+                medication.status = 'discontinued';
+                medication.endDate = new Date().toISOString();
+                window.dataManager.saveData();
+                
+                // Add medication change to timeline
+                addMedicationChangeToTimeline(medication, 'discontinued');
+                
+                toast('Medication discontinued', 'success');
+                
+                // Refresh the modal
+                const modal = document.querySelector('.modal.show');
+                if (modal) {
+                    modal.remove();
+                    const patientId = medication.patientId;
+                    openMedicationsModal(patientId);
+                }
+            }
+        }
+    }
 }

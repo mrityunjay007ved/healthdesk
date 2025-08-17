@@ -205,7 +205,7 @@ document.head.appendChild(rippleStyle);
 // Welcome message on page load
 window.addEventListener('load', function() {
     setTimeout(() => {
-        showNotification('Welcome to your elyx dashboard!', 'success');
+        showNotification('Welcome to your HealthDesk dashboard!', 'success');
     }, 1000);
 });
 
@@ -995,3 +995,145 @@ function debugDataLoading() {
     if (window.dataManager) {
         window.dataManager.startMessagePolling();
     }
+
+// Current Medications Functions
+async function openMemberMedications() {
+    const member = getCurrentMember();
+    if (!member) {
+        showNotification('Member not found', 'error');
+        return;
+    }
+    
+    console.log('🔍 Opening medications for member:', member);
+    
+    // Ensure data manager is loaded
+    if (!window.dataManager) {
+        showNotification('Loading data...', 'info');
+        return;
+    }
+    
+    // Wait for data to be loaded
+    try {
+        await window.dataManager.loadData();
+    } catch (error) {
+        console.error('Error loading data:', error);
+        showNotification('Error loading medications', 'error');
+        return;
+    }
+    
+    console.log('📊 Data manager:', window.dataManager);
+    console.log('💊 All medications:', window.dataManager?.data?.medications);
+    
+    // Load member medications from data manager
+    const medications = window.dataManager?.data?.medications?.filter(med => med.patientId === member.id) || [];
+    
+    console.log('💊 Filtered medications for member ID', member.id, ':', medications);
+    
+    // Update modal title
+    document.getElementById('memberMedicationsTitle').textContent = `Current Medications - ${member.name}`;
+    
+    // Display medications in the modal
+    const medicationsList = document.getElementById('memberMedicationsList');
+    
+    if (medications.length > 0) {
+        medicationsList.innerHTML = `
+            <div class="medications-container">
+                <div class="medications-list">
+                    ${medications.map(med => `
+                        <div class="medication-item" style="background: #f8f9fa; border-radius: 12px; padding: 20px; margin-bottom: 20px; border-left: 4px solid #667eea;">
+                            <div class="medication-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                                <h4 style="margin: 0; color: #333; font-size: 1.2rem;">${med.name}</h4>
+                                <span class="medication-status ${med.status}" style="background: ${med.status === 'active' ? '#28a745' : '#dc3545'}; color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem;">${med.status}</span>
+                            </div>
+                            <div class="medication-details" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                                <div>
+                                    <p style="margin: 5px 0;"><strong>Dosage:</strong> ${med.dosage}</p>
+                                    <p style="margin: 5px 0;"><strong>Frequency:</strong> ${med.frequency}</p>
+                                    <p style="margin: 5px 0;"><strong>Start Date:</strong> ${new Date(med.startDate).toLocaleDateString()}</p>
+                                </div>
+                                <div>
+                                    <p style="margin: 5px 0;"><strong>Instructions:</strong> ${med.instructions}</p>
+                                    ${med.endDate ? `<p style="margin: 5px 0;"><strong>End Date:</strong> ${new Date(med.endDate).toLocaleDateString()}</p>` : ''}
+                                    <p style="margin: 5px 0;"><strong>Prescribed By:</strong> ${med.prescribedBy || 'Doctor'}</p>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+    } else {
+        medicationsList.innerHTML = `
+            <div class="no-medications" style="text-align: center; padding: 40px;">
+                <p style="font-size: 1.1rem; color: #666; margin-bottom: 10px;">No medications found for your account.</p>
+                <p style="color: #888;">Please contact your doctor to add medications.</p>
+            </div>
+        `;
+    }
+    
+    // Show the modal
+    document.getElementById('memberMedicationsModal').classList.add('show');
+    
+    console.log('💊 Opened medications modal for member:', member.name);
+}
+
+function closeMemberMedicationsModal() {
+    document.getElementById('memberMedicationsModal').classList.remove('show');
+}
+
+// Function to switch between different users for testing
+function switchUser(userId) {
+    const users = {
+        1: { id: 1, email: 'member@example.com', userType: 'member', name: 'John Doe' },
+        3: { id: 3, email: 'alice@example.com', userType: 'member', name: 'Alice Johnson' },
+        4: { id: 4, email: 'michael@example.com', userType: 'member', name: 'Michael Smith' },
+        5: { id: 5, email: 'priya@example.com', userType: 'member', name: 'Priya Patel' },
+        6: { id: 6, email: 'wei@example.com', userType: 'member', name: 'Wei Chen' }
+    };
+    
+    const user = users[userId];
+    if (user) {
+        localStorage.setItem('currentUser', JSON.stringify(user));
+        showNotification(`Switched to ${user.name}`, 'success');
+        
+        // Update welcome message
+        updateMemberWelcome();
+        
+        // Refresh the page to reload with new user
+        setTimeout(() => {
+            window.location.reload();
+        }, 1000);
+    } else {
+        showNotification('User not found', 'error');
+    }
+}
+
+// Add user switcher buttons to the page for testing
+function addUserSwitcher() {
+    const switcher = document.createElement('div');
+    switcher.style.cssText = `
+        position: fixed;
+        top: 100px;
+        right: 20px;
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 15px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        z-index: 1000;
+        font-size: 12px;
+    `;
+    
+    switcher.innerHTML = `
+        <div style="margin-bottom: 10px; font-weight: bold;">Switch User (Testing)</div>
+        <button onclick="switchUser(1)" style="margin: 2px; padding: 4px 8px; font-size: 10px;">John Doe</button>
+        <button onclick="switchUser(3)" style="margin: 2px; padding: 4px 8px; font-size: 10px;">Alice Johnson</button>
+        <button onclick="switchUser(4)" style="margin: 2px; padding: 4px 8px; font-size: 10px;">Michael Smith</button>
+        <button onclick="switchUser(5)" style="margin: 2px; padding: 4px 8px; font-size: 10px;">Priya Patel</button>
+        <button onclick="switchUser(6)" style="margin: 2px; padding: 4px 8px; font-size: 10px;">Wei Chen</button>
+    `;
+    
+    document.body.appendChild(switcher);
+}
+
+// User switcher removed - no longer needed for production

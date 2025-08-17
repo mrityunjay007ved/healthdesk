@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>elyx - Member Dashboard</title>
+    <title>HealthDesk - Member Dashboard</title>
     <link rel="stylesheet" href="member-dashboard.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>❤️</text></svg>">
 </head>
 <body>
     <div class="container">
@@ -14,7 +15,7 @@
         <header class="header">
             <div class="logo">
                 <i class="fas fa-heartbeat"></i>
-                <span>elyx</span>
+                <span>HealthDesk</span>
             </div>
             <div class="user-info">
                 <span class="welcome-text">Welcome, Member</span>
@@ -88,13 +89,13 @@
                     <button class="card-btn"><span>Request Appointment</span><i class="fas fa-arrow-right"></i></button>
                 </div>
 
-                <!-- Chat with Doctor Option -->
+                <!-- Consultation Desk Option -->
                 <div class="dashboard-card" onclick="toggleChat()">
                     <div class="card-icon">
                         <i class="fas fa-comments"></i>
                         <div class="unread-badge" id="chatUnreadBadge">0</div>
                     </div>
-                    <h3>Chat with Doctor</h3>
+                    <h3>Consultation Desk</h3>
                     <p>Send messages and communicate directly with your healthcare provider</p>
                     <div class="card-features">
                         <div class="feature"><i class="fas fa-check"></i><span>Real-time Messaging</span></div>
@@ -102,6 +103,21 @@
                         <div class="feature"><i class="fas fa-check"></i><span>Quick Responses</span></div>
                     </div>
                     <button class="card-btn"><span>Open Chat</span><i class="fas fa-arrow-right"></i></button>
+                </div>
+
+                <!-- Current Medications Option -->
+                <div class="dashboard-card" onclick="openMemberMedications()">
+                    <div class="card-icon">
+                        <i class="fas fa-pills"></i>
+                    </div>
+                    <h3>Current Medications</h3>
+                    <p>View and manage your current prescription medications</p>
+                    <div class="card-features">
+                        <div class="feature"><i class="fas fa-check"></i><span>View Prescriptions</span></div>
+                        <div class="feature"><i class="fas fa-check"></i><span>Dosage Information</span></div>
+                        <div class="feature"><i class="fas fa-check"></i><span>Medication History</span></div>
+                    </div>
+                    <button class="card-btn"><span>View Medications</span><i class="fas fa-arrow-right"></i></button>
                 </div>
             </div>
 
@@ -202,7 +218,7 @@
         <footer class="footer">
             <div class="footer-content">
                 <div class="footer-section">
-                    <h4>elyx</h4>
+                    <h4>HealthDesk</h4>
                     <p>Empowering better healthcare through technology</p>
                     <div class="social-links">
                         <a href="#"><i class="fab fa-facebook"></i></a>
@@ -237,9 +253,26 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2024 elyx. All rights reserved.</p>
+                <p>&copy; 2024 HealthDesk. All rights reserved.</p>
             </div>
         </footer>
+    </div>
+
+    <!-- Current Medications Modal -->
+    <div class="modal" id="memberMedicationsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="memberMedicationsTitle">Current Medications</h3>
+                <button class="modal-close" onclick="closeMemberMedicationsModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="medications-list" id="memberMedicationsList">
+                    <!-- Medications will be populated here -->
+                </div>
+            </div>
+        </div>
     </div>
 
     <script src="data-manager.js"></script>
