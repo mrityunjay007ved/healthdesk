@@ -100,9 +100,9 @@ class DataManager {
                         lastLogin: new Date().toISOString()
                     }
                 ],
-                loginHistory: [],
                 conversations: [],
                 messages: [],
+                loginHistory: [],
                 settings: {
                     maxLoginAttempts: 5,
                     sessionTimeout: 3600,
@@ -113,7 +113,9 @@ class DataManager {
                         enableRealTimeNotifications: true,
                         messageRetentionDays: 365
                     }
-                }
+                },
+                medications: [],
+                dailyProgress: []
             };
             
             console.log('✅ Default data initialized');
@@ -890,6 +892,60 @@ class DataManager {
             statistics: this.getConversationStats(conversationId),
             exportedAt: new Date().toISOString()
         };
+    }
+
+    // Get daily progress for a specific user
+    getDailyProgress(userId, date = null) {
+        if (!this.data || !this.data.dailyProgress) return [];
+        
+        const targetDate = date || new Date().toISOString().split('T')[0];
+        
+        return this.data.dailyProgress
+            .filter(progress => progress.userId === userId && progress.date === targetDate)
+            .sort((a, b) => new Date(b.savedAt) - new Date(a.savedAt));
+    }
+
+    // Get all daily progress for a user (last 30 days)
+    getUserDailyProgress(userId, days = 30) {
+        if (!this.data || !this.data.dailyProgress) return [];
+        
+        const cutoffDate = new Date();
+        cutoffDate.setDate(cutoffDate.getDate() - days);
+        
+        return this.data.dailyProgress
+            .filter(progress => progress.userId === userId && new Date(progress.date) >= cutoffDate)
+            .sort((a, b) => new Date(b.date) - new Date(a.date));
+    }
+
+    // Get recent daily progress for all users (for doctor dashboard)
+    getAllUsersDailyProgress(days = 7) {
+        if (!this.data || !this.data.dailyProgress) return [];
+        
+        const cutoffDate = new Date();
+        cutoffDate.setDate(cutoffDate.getDate() - days);
+        
+        return this.data.dailyProgress
+            .filter(progress => new Date(progress.date) >= cutoffDate)
+            .sort((a, b) => new Date(b.date) - new Date(a.date));
+    }
+
+    // Add or update daily progress
+    addDailyProgress(progressData) {
+        if (!this.data) return false;
+        
+        if (!this.data.dailyProgress) {
+            this.data.dailyProgress = [];
+        }
+        
+        // Remove existing entry for same user and date
+        this.data.dailyProgress = this.data.dailyProgress.filter(
+            progress => !(progress.userId === progressData.userId && progress.date === progressData.date)
+        );
+        
+        // Add new entry
+        this.data.dailyProgress.push(progressData);
+        
+        return true;
     }
 }
 

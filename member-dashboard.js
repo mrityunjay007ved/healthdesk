@@ -18,6 +18,9 @@ function navigateTo(page) {
             case 'request-appointment':
                 window.location.href = 'request-appointment.html';
                 break;
+            case 'todays-goal':
+                window.location.href = 'todays-goal.html';
+                break;
             case 'emergency':
                 showNotification('Emergency Contact: 911', 'info');
                 break;

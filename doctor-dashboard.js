@@ -108,6 +108,10 @@ function handlePatientAction(action){
 		closePatientModal();
 		openMedicationsModal(id);
 	}
+	if (action === 'daily-progress') {
+		closePatientModal();
+		openDailyProgressModal(id);
+	}
 }
 
 function openDrawer(){
@@ -1455,3 +1459,156 @@ function discontinueMedication(medicationId) {
         }
     }
 }
+
+// Daily Progress Functions
+function openDailyProgressModal(patientId) {
+    const patient = getPatientById(patientId);
+    if (!patient) {
+        toast('Patient not found', 'error');
+        return;
+    }
+    
+    // Set patient name in modal
+    document.getElementById('progressPatientName').textContent = patient.name;
+    
+    // Set today's date as default
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('progressDate').value = today;
+    
+    // Show modal
+    document.getElementById('dailyProgressModal').classList.add('show');
+    
+    // Load progress for today
+    loadDailyProgress();
+    
+    console.log('📊 Opening daily progress modal for patient:', patient.name);
+}
+
+function closeDailyProgressModal() {
+    document.getElementById('dailyProgressModal').classList.remove('show');
+}
+
+function loadDailyProgress() {
+    const patientId = document.getElementById('patientModal').dataset.patientId;
+    const selectedDate = document.getElementById('progressDate').value;
+    
+    if (!patientId || !selectedDate) return;
+    
+    const patient = getPatientById(patientId);
+    if (!patient) return;
+    
+    // Get progress data from data manager
+    if (window.dataManager) {
+        const progressData = window.dataManager.getDailyProgress(patient.email, selectedDate);
+        
+        if (progressData.length > 0) {
+            const progress = progressData[0]; // Get the most recent entry
+            displayDailyProgress(progress);
+        } else {
+            showNoProgressMessage();
+        }
+    }
+}
+
+function displayDailyProgress(progress) {
+    // Hide no progress message
+    document.getElementById('noProgressMessage').style.display = 'none';
+    
+    // Show progress sections
+    document.getElementById('progressSummary').style.display = 'block';
+    document.getElementById('progressGoalsList').style.display = 'block';
+    document.getElementById('progressLifestyleGoals').style.display = 'block';
+    
+    // Update progress summary
+    const summary = document.getElementById('progressSummary');
+    summary.innerHTML = `
+        <div class="progress-overview">
+            <div class="progress-stat">
+                <span class="stat-number">${progress.completedCount}</span>
+                <span class="stat-label">Completed</span>
+            </div>
+            <div class="progress-stat">
+                <span class="stat-number">${progress.totalCount}</span>
+                <span class="stat-label">Total Goals</span>
+            </div>
+            <div class="progress-stat">
+                <span class="stat-number">${progress.percentage}%</span>
+                <span class="stat-label">Completion Rate</span>
+            </div>
+        </div>
+        <div class="progress-bar">
+            <div class="progress-fill" style="width: ${progress.percentage}%"></div>
+        </div>
+    `;
+    
+    // Display workout goals
+    const goalsList = document.getElementById('progressGoalsList');
+    goalsList.innerHTML = '';
+    
+    if (progress.goals && progress.goals.length > 0) {
+        progress.goals.forEach(goal => {
+            const isCompleted = progress.progress[goal.id] || false;
+            const goalElement = document.createElement('div');
+            goalElement.className = `goal-item ${isCompleted ? 'completed' : ''}`;
+            goalElement.innerHTML = `
+                <div class="goal-status">
+                    <i class="fas ${isCompleted ? 'fa-check-circle' : 'fa-circle'} ${isCompleted ? 'completed' : ''}"></i>
+                </div>
+                <div class="goal-content">
+                    <div class="goal-title">${goal.title}</div>
+                    ${goal.description ? `<div class="goal-description">${goal.description}</div>` : ''}
+                </div>
+            `;
+            goalsList.appendChild(goalElement);
+        });
+    } else {
+        goalsList.innerHTML = '<p class="no-goals">No workout goals for this day.</p>';
+    }
+    
+    // Display lifestyle goals
+    const lifestyleGoals = document.getElementById('progressLifestyleGoals');
+    lifestyleGoals.innerHTML = '';
+    
+    if (progress.lifestyleGoals && progress.lifestyleGoals.length > 0) {
+        progress.lifestyleGoals.forEach(goal => {
+            const isCompleted = progress.progress[goal.id] || false;
+            const goalElement = document.createElement('div');
+            goalElement.className = `lifestyle-goal ${isCompleted ? 'completed' : ''}`;
+            goalElement.innerHTML = `
+                <div class="goal-status">
+                    <i class="fas ${isCompleted ? 'fa-check-circle' : 'fa-circle'} ${isCompleted ? 'completed' : ''}"></i>
+                </div>
+                <div class="goal-content">
+                    <div class="goal-title">${goal.title}</div>
+                    ${goal.description ? `<div class="goal-description">${goal.description}</div>` : ''}
+                </div>
+            `;
+            lifestyleGoals.appendChild(goalElement);
+        });
+    } else {
+        lifestyleGoals.innerHTML = '<p class="no-goals">No lifestyle goals for this day.</p>';
+    }
+}
+
+function showNoProgressMessage() {
+    // Hide progress sections
+    document.getElementById('progressSummary').style.display = 'none';
+    document.getElementById('progressGoalsList').style.display = 'none';
+    document.getElementById('progressLifestyleGoals').style.display = 'none';
+    
+    // Show no progress message
+    document.getElementById('noProgressMessage').style.display = 'block';
+}
+
+// Add event listeners for daily progress modal
+document.addEventListener('DOMContentLoaded', function() {
+    // Close daily progress modal
+    document.getElementById('closeDailyProgressModal').addEventListener('click', closeDailyProgressModal);
+    
+    // Close modal when clicking outside
+    document.getElementById('dailyProgressModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeDailyProgressModal();
+        }
+    });
+});

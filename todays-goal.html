@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HealthDesk - Today's Goal</title>
+    <link rel="stylesheet" href="todays-goal.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>❤️</text></svg>">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <i class="fas fa-heartbeat"></i>
+                <span>HealthDesk</span>
+            </div>
+            <div class="user-info">
+                <span class="welcome-text">Welcome, Member</span>
+                <button class="back-btn" onclick="goBack()">
+                    <i class="fas fa-arrow-left"></i>
+                    Back to Dashboard
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="page-header">
+                <h1><i class="fas fa-target"></i> Today's Goal</h1>
+                <p id="dateDisplay">Loading today's goals...</p>
+            </div>
+
+            <!-- Progress Summary -->
+            <div class="progress-summary" id="progressSummary">
+                <div class="progress-card">
+                    <div class="progress-icon">
+                        <i class="fas fa-chart-pie"></i>
+                    </div>
+                    <div class="progress-info">
+                        <h3>Today's Progress</h3>
+                        <div class="progress-stats">
+                            <span id="completedCount">0</span> of <span id="totalCount">0</span> goals completed
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressFill"></div>
+                        </div>
+                        <div class="progress-percentage" id="progressPercentage">0%</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Today's Goals Section -->
+            <div class="goals-container">
+                <div class="goals-header">
+                    <h2 id="dayTitle">Today's Goals</h2>
+                    <div class="day-info">
+                        <span id="dayType">Loading...</span>
+                        <span id="duration">Loading...</span>
+                    </div>
+                </div>
+
+                <!-- Goals List -->
+                <div class="goals-list" id="goalsList">
+                    <!-- Goals will be populated here -->
+                </div>
+
+                <!-- No Goals Message -->
+                <div class="no-goals-message" id="noGoalsMessage" style="display: none;">
+                    <i class="fas fa-calendar-times"></i>
+                    <h3>No Goals for Today</h3>
+                    <p>It looks like there are no specific goals scheduled for today.</p>
+                    <p>Check your <a href="current-plan.html">Current Plan</a> to see your weekly schedule.</p>
+                </div>
+
+                <!-- Rest Day Message -->
+                <div class="rest-day-message" id="restDayMessage" style="display: none;">
+                    <i class="fas fa-bed"></i>
+                    <h3>Rest Day</h3>
+                    <p>Today is your scheduled rest day. Take time to recover and recharge!</p>
+                    <div class="rest-day-suggestions">
+                        <h4>Rest Day Suggestions:</h4>
+                        <ul>
+                            <li>Light stretching or yoga</li>
+                            <li>Gentle walking</li>
+                            <li>Focus on hydration</li>
+                            <li>Get adequate sleep</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lifestyle Goals Section -->
+            <div class="lifestyle-section">
+                <h2><i class="fas fa-heart"></i> Lifestyle Goals</h2>
+                <div class="lifestyle-goals" id="lifestyleGoals">
+                    <!-- Lifestyle goals will be populated here -->
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <button class="btn-secondary" onclick="resetProgress()">
+                    <i class="fas fa-undo"></i>
+                    Reset Progress
+                </button>
+                <button class="btn-primary" onclick="saveProgress()">
+                    <i class="fas fa-save"></i>
+                    Save Progress
+                </button>
+            </div>
+
+            <!-- Success Message -->
+            <div class="success-message" id="successMessage" style="display: none;">
+                <i class="fas fa-check-circle"></i>
+                <p>Progress saved successfully!</p>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>HealthDesk</h4>
+                    <p>Empowering better healthcare through technology</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="member-dashboard.html">Dashboard</a></li>
+                        <li><a href="current-plan.html">Current Plan</a></li>
+                        <li><a href="health-report.html">Health Report</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact</h4>
+                    <p><i class="fas fa-phone"></i> (555) 123-4567</p>
+                    <p><i class="fas fa-envelope"></i> support@healthdesk.com</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 HealthDesk. All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="todays-goal.js"></script>
+</body>
+</html>
