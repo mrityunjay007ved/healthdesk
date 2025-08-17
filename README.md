@@ -1,26 +1,37 @@
-# 🏥 elyx - Healthcare Portal
+# 🏥 HealthDesk - Healthcare Portal
 
-A modern, responsive healthcare management system built with HTML, CSS, JavaScript, and Python Flask backend.
+A modern, responsive healthcare management system built with HTML, CSS, and JavaScript. Complete medication synchronization system with patient timeline and real-time updates.
 
 ## 🌟 Features
 
 ### 🔐 Authentication System
 - **User Registration & Login** - Secure member and doctor authentication
 - **Session Management** - Persistent login with "Remember Me" functionality
-- **Password Security** - Hashed passwords with Werkzeug security
+- **Password Security** - Secure password handling
 - **Role-based Access** - Separate portals for members and doctors
 
 ### 👤 Member Dashboard
 - **Personalized Welcome** - Dynamic user name display
 - **Profile Management** - Complete member snapshot with editable fields
-- **Health Information** - Medical records and history (ready for expansion)
+- **Current Medications** - View user-specific medications with real-time sync
+- **Consultation Desk** - Real-time chat with healthcare providers
+- **Health Information** - Medical records and history
 - **Appointment Booking** - Request and manage appointments
 - **Weekly Reviews** - Health progress tracking and analytics
 
 ### 🩺 Doctor Portal
 - **Patient Management** - View and manage patient records
+- **Current Medications** - Add, edit, and discontinue patient medications
+- **Patient Timeline** - Complete medical history with medication changes
+- **Consultation Desk** - Real-time chat with patients
 - **Appointment Scheduling** - Manage patient appointments
 - **Medical Records** - Access and update patient information
+
+### 📊 Patient Timeline
+- **Complete Medical History** - 8-month digital health monitoring
+- **Medication Changes** - Track all prescription modifications
+- **Real-time Sync** - Automatic updates when medications change
+- **Conversation History** - Full patient-doctor dialogue records
 
 ### 📊 Admin Panel
 - **User Management** - View all registered users
@@ -36,20 +47,25 @@ A modern, responsive healthcare management system built with HTML, CSS, JavaScri
 - **Font Awesome** - Icon library
 - **Google Fonts** - Typography (Inter)
 
-### Backend
-- **Python Flask** - Web framework
-- **SQLite** - Database
-- **Flask-CORS** - Cross-origin resource sharing
-- **Werkzeug** - Security utilities
+### Data Management
+- **localStorage** - Client-side data persistence
+- **Real-time Updates** - Cross-tab synchronization
+- **JSON Data** - Structured data management
 
 ## 📁 Project Structure
 
 ```
-elyx/
+healthdesk/
 ├── index.html              # Main login page
 ├── member-dashboard.html   # Member dashboard
 ├── member-dashboard.css    # Member dashboard styles
 ├── member-dashboard.js     # Member dashboard functionality
+├── doctor-dashboard.html   # Doctor dashboard
+├── doctor-dashboard.css    # Doctor dashboard styles
+├── doctor-dashboard.js     # Doctor dashboard functionality
+├── patient-timeline.html   # Patient timeline
+├── patient-timeline.css    # Patient timeline styles
+├── patient-timeline.js     # Patient timeline functionality
 ├── profile.html           # Member profile page
 ├── profile.css            # Profile page styles
 ├── profile.js             # Profile page functionality
@@ -59,17 +75,13 @@ elyx/
 ├── styles.css             # Global styles
 ├── script.js              # Main JavaScript functionality
 ├── data-manager.js        # Data management utilities
-├── data.json              # Sample user data
-├── app.py                 # Flask backend server
-├── requirements.txt       # Python dependencies
-├── elyx.db               # SQLite database
+├── data.json              # Sample user and medication data
 └── README.md             # Project documentation
 ```
 
 ## 🚀 Quick Start
 
 ### Prerequisites
-- Python 3.7 or higher
 - Modern web browser
 - Git
 
@@ -77,73 +89,45 @@ elyx/
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/mrityunjay007ved/elyx.git
-   cd elyx
+   git clone https://github.com/mrityunjay007ved/healthdesk.git
+   cd healthdesk
    ```
 
-2. **Install Python dependencies**
+2. **Start the local server**
    ```bash
-   pip install -r requirements.txt
+   python -m http.server 8080
    ```
 
-3. **Start the Flask backend**
-   ```bash
-   python app.py
-   ```
-   The server will start on `http://localhost:5001`
-
-4. **Start the frontend server**
-   ```bash
-   python -m http.server 8000
-   ```
-   The frontend will be available at `http://localhost:8000`
-
-5. **Access the application**
-   - Frontend: http://localhost:8000
-   - Backend API: http://localhost:5001
+3. **Access the application**
+   - Open your browser and go to: http://localhost:8080
 
 ## 👥 User Types
 
 ### Member Users
-- **Default Credentials**: `member@example.com` / `password123`
-- **Features**: Profile management, appointment booking, health tracking
+- **John Doe**: `member@example.com` / `password123`
+- **Alice Johnson**: `alice@example.com` / `alice123`
+- **Michael Smith**: `michael@example.com` / `michael123`
+- **Priya Patel**: `priya@example.com` / `priya123`
+- **Wei Chen**: `wei@example.com` / `wei123`
 
 ### Doctor Users
-- **Default Credentials**: `doctor@example.com` / `doctor123`
-- **Features**: Patient management, appointment scheduling
+- **Dr. Jane Smith**: `doctor@example.com` / `doctor123`
 
-## 📋 Member Snapshot Fields
+## 💊 Medication Management
 
-The member profile includes the following information:
+### Current Medications by Patient:
+- **John Doe**: Vitamin D3 2000 IU, Sertraline 12.5mg
+- **Alice Johnson**: Metformin 500mg, Glimepiride 1mg
+- **Michael Smith**: Atorvastatin 10mg, Escitalopram 5mg
+- **Priya Patel**: Lisinopril 10mg, Amlodipine 5mg
+- **Wei Chen**: Simvastatin 20mg, Vitamin B12 1000mcg
 
-1. **Personal Information**
-   - Preferred Name
-   - Date of Birth
-   - Age (auto-calculated)
-   - Gender Identity
+## 🔄 Real-time Features
 
-2. **Location Information**
-   - Primary Residence
-   - Frequent Travel Hubs
-
-3. **Professional Information**
-   - Occupation / Business Commitments
-   - Personal Assistant
-
-## 🔧 API Endpoints
-
-### Authentication
-- `POST /api/register` - Register new user
-- `POST /api/login` - User login
-- `POST /api/logout` - User logout
-
-### User Management
-- `GET /api/user/profile` - Get user profile
-- `PUT /api/user/profile` - Update user profile
-
-### System
-- `GET /api/stats` - Get system statistics
-- `GET /api/health` - Health check
+- **Cross-tab Synchronization** - Updates across multiple browser tabs
+- **Medication Sync** - Changes reflect immediately across all dashboards
+- **Timeline Updates** - New medication events appear in patient timeline
+- **Live Chat** - Real-time messaging between doctors and patients
 
 ## 🎨 Design Features
 
@@ -151,15 +135,13 @@ The member profile includes the following information:
 - **Modern UI** - Clean, professional interface
 - **Smooth Animations** - Enhanced user experience
 - **Accessibility** - WCAG compliant design
-- **Dark/Light Mode Ready** - Easy theme switching
+- **Professional Healthcare Theme** - Trustworthy medical interface
 
 ## 🔒 Security Features
 
-- **Password Hashing** - Secure password storage
+- **Client-side Validation** - Input validation and sanitization
 - **Session Management** - Secure user sessions
-- **Input Validation** - Client and server-side validation
-- **CORS Protection** - Cross-origin request handling
-- **SQL Injection Prevention** - Parameterized queries
+- **Data Persistence** - Reliable data storage and retrieval
 
 ## 📱 Browser Support
 
@@ -189,12 +171,11 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 - Font Awesome for icons
 - Google Fonts for typography
-- Flask community for the excellent framework
 - All contributors and testers
 
 ## 📞 Support
 
-For support, email support@elyx.com or create an issue in this repository.
+For support, create an issue in this repository.
 
 ---
 
