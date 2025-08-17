@@ -9,7 +9,7 @@ body {
     font-family: 'Inter', sans-serif;
     line-height: 1.6;
     color: #333;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #ff8c00 0%, #ff6b35 100%);
     min-height: 100vh;
 }
 
@@ -41,7 +41,7 @@ body {
     gap: 10px;
     font-size: 24px;
     font-weight: 700;
-    color: #667eea;
+    color: #ff8c00;
 }
 
 .logo i {
@@ -64,7 +64,7 @@ body {
 }
 
 .nav a:hover {
-    color: #667eea;
+    color: #ff8c00;
 }
 
 .nav a::after {
@@ -74,7 +74,7 @@ body {
     left: 0;
     width: 0;
     height: 2px;
-    background: #667eea;
+    background: #ff8c00;
     transition: width 0.3s ease;
 }
 
@@ -171,11 +171,11 @@ body {
 }
 
 .member-card::before {
-    background: linear-gradient(90deg, #667eea, #764ba2);
+    background: linear-gradient(90deg, #ff8c00, #ff6b35);
 }
 
 .doctor-card::before {
-    background: linear-gradient(90deg, #e74c3c, #f39c12);
+    background: linear-gradient(90deg, #10b981, #059669);
 }
 
 .login-card:hover {
@@ -196,11 +196,11 @@ body {
 }
 
 .member-card .card-icon {
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    background: linear-gradient(135deg, #ff8c00, #ff6b35);
 }
 
 .doctor-card .card-icon {
-    background: linear-gradient(135deg, #e74c3c, #f39c12);
+    background: linear-gradient(135deg, #10b981, #059669);
 }
 
 .login-card h3 {
@@ -249,11 +249,11 @@ body {
 }
 
 .member-btn {
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    background: linear-gradient(135deg, #ff8c00, #ff6b35);
 }
 
 .doctor-btn {
-    background: linear-gradient(135deg, #e74c3c, #f39c12);
+    background: linear-gradient(135deg, #10b981, #059669);
 }
 
 .login-btn:hover {
@@ -297,7 +297,7 @@ body {
     width: 80px;
     height: 80px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    background: linear-gradient(135deg, #ff8c00, #ff6b35);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -334,7 +334,7 @@ body {
 .footer-section h4 {
     font-size: 1.2rem;
     margin-bottom: 20px;
-    color: #667eea;
+    color: #ff8c00;
 }
 
 .footer-section p {
@@ -359,7 +359,7 @@ body {
 
 .footer-section ul li a:hover {
     opacity: 1;
-    color: #667eea;
+    color: #ff8c00;
 }
 
 .social-links {
@@ -372,7 +372,7 @@ body {
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background: #667eea;
+    background: #ff8c00;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -382,7 +382,7 @@ body {
 }
 
 .social-links a:hover {
-    background: #764ba2;
+    background: #ff6b35;
     transform: translateY(-2px);
 }
 
@@ -445,7 +445,7 @@ body {
 .modal-header {
     text-align: center;
     padding: 30px 30px 20px;
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    background: linear-gradient(135deg, #ff8c00, #ff6b35);
     color: white;
     border-radius: 20px 20px 0 0;
 }
@@ -494,7 +494,7 @@ body {
 .input-group i {
     position: absolute;
     left: 15px;
-    color: #667eea;
+    color: #ff8c00;
     z-index: 2;
 }
 
@@ -509,7 +509,7 @@ body {
 
 .input-group input:focus {
     outline: none;
-    border-color: #667eea;
+    border-color: #ff8c00;
 }
 
 .toggle-password {
@@ -524,7 +524,7 @@ body {
 }
 
 .toggle-password:hover {
-    color: #667eea;
+    color: #ff8c00;
 }
 
 .form-options {
@@ -557,8 +557,8 @@ body {
 }
 
 .checkbox-container input[type="checkbox"]:checked + .checkmark {
-    background: #667eea;
-    border-color: #667eea;
+    background: #ff8c00;
+    border-color: #ff8c00;
 }
 
 .checkbox-container input[type="checkbox"]:checked + .checkmark::after {
@@ -572,20 +572,20 @@ body {
 }
 
 .forgot-password {
-    color: #667eea;
+    color: #ff8c00;
     text-decoration: none;
     font-size: 0.9rem;
     transition: color 0.3s ease;
 }
 
 .forgot-password:hover {
-    color: #764ba2;
+    color: #ff6b35;
 }
 
 .submit-btn {
     width: 100%;
     padding: 15px;
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    background: linear-gradient(135deg, #ff8c00, #ff6b35);
     color: white;
     border: none;
     border-radius: 10px;
@@ -601,7 +601,7 @@ body {
 
 .submit-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 5px 15px rgba(255, 140, 0, 0.3);
 }
 
 .modal-footer {
@@ -611,13 +611,13 @@ body {
 }
 
 .modal-footer a {
-    color: #667eea;
+    color: #ff8c00;
     text-decoration: none;
     font-weight: 500;
 }
 
 .modal-footer a:hover {
-    color: #764ba2;
+    color: #ff6b35;
 }
 
 /* Responsive Design */

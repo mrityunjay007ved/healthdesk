@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cache Clear Helper</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #ff8c00, #ff6b35);
+            color: white;
+            text-align: center;
+        }
+        .container {
+            background: rgba(255,255,255,0.1);
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+        button {
+            background: white;
+            color: #ff8c00;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 10px;
+            transition: all 0.3s ease;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        .status {
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔄 Cache Clear Helper</h1>
+        <p>Use these buttons to force refresh the updated color schemes:</p>
+        
+        <div class="status" id="status">
+            Click a button below to clear cache and reload...
+        </div>
+        
+        <button onclick="clearCacheAndReload('index.html')">
+            🏠 Clear Cache & Go to Login Page
+        </button>
+        
+        <button onclick="clearCacheAndReload('member-dashboard.html')">
+            👤 Clear Cache & Go to Member Dashboard
+        </button>
+        
+        <button onclick="clearCacheAndReload('doctor-dashboard.html')">
+            👨‍⚕️ Clear Cache & Go to Doctor Dashboard (Emerald Glow)
+        </button>
+        
+        <button onclick="clearCacheAndReload('patient-timeline.html')">
+            📊 Clear Cache & Go to Patient Timeline (Emerald Glow)
+        </button>
+        
+        <button onclick="hardRefresh()">
+            🔄 Force Hard Refresh (Ctrl+F5)
+        </button>
+        
+        <div style="margin-top: 30px; font-size: 14px; opacity: 0.8;">
+            <p><strong>Manual Steps:</strong></p>
+            <p>1. Press <kbd>Ctrl+Shift+R</kbd> (Windows/Linux) or <kbd>Cmd+Shift+R</kbd> (Mac)</p>
+            <p>2. Or open Developer Tools (F12) → Right-click refresh button → "Empty Cache and Hard Reload"</p>
+        </div>
+    </div>
+
+    <script>
+        function clearCacheAndReload(page) {
+            document.getElementById('status').innerHTML = '🔄 Clearing cache and redirecting...';
+            
+            // Clear localStorage and sessionStorage
+            localStorage.clear();
+            sessionStorage.clear();
+            
+            // Force reload with cache busting
+            setTimeout(() => {
+                window.location.href = page + '?v=' + Date.now();
+            }, 1000);
+        }
+        
+        function hardRefresh() {
+            document.getElementById('status').innerHTML = '🔄 Performing hard refresh...';
+            
+            // Clear all storage
+            localStorage.clear();
+            sessionStorage.clear();
+            
+            // Force reload
+            setTimeout(() => {
+                window.location.reload(true);
+            }, 1000);
+        }
+        
+        // Auto-detect if we're on the right page
+        if (window.location.pathname.includes('clear-cache.html')) {
+            document.getElementById('status').innerHTML = '✅ Cache clear helper loaded successfully!';
+        }
+    </script>
+</body>
+</html>

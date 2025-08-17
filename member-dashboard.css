@@ -32,7 +32,7 @@ body {
     right: 0;
     bottom: 0;
     z-index: -1;
-    background: radial-gradient(125% 125% at 50% 90%, #fff 40%, #7c3aed 100%);
+    background: radial-gradient(125% 125% at 50% 90%, #fff 40%, #ff8c00 100%);
 }
 
 .container {
@@ -61,7 +61,7 @@ body {
     gap: 10px;
     font-size: 24px;
     font-weight: 700;
-    color: #667eea;
+    color: #ff8c00;
 }
 
 .logo i {
@@ -147,7 +147,7 @@ body {
     align-items: center;
     padding: 20px 25px;
     border-bottom: 1px solid #e1e5e9;
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    background: linear-gradient(135deg, #ff8c00, #ff6b35);
     color: white;
 }
 
@@ -193,13 +193,13 @@ body {
     background: #f8f9fa;
     border-radius: 12px;
     padding: 20px;
-    border-left: 4px solid #667eea;
+    border-left: 4px solid #ff8c00;
     transition: all 0.3s ease;
 }
 
 .medication-item:hover {
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.1);
+    box-shadow: 0 5px 15px rgba(255, 140, 0, 0.1);
 }
 
 .medication-header {
@@ -312,7 +312,7 @@ body {
     left: 0;
     right: 0;
     height: 4px;
-    background: linear-gradient(90deg, #667eea, #764ba2);
+    background: linear-gradient(90deg, #ff8c00, #ff6b35);
 }
 
 .dashboard-card:hover {
@@ -324,7 +324,7 @@ body {
     width: 70px;
     height: 70px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    background: linear-gradient(135deg, #ff8c00, #ff6b35);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -366,7 +366,7 @@ body {
 .card-btn {
     width: 100%;
     padding: 12px;
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    background: linear-gradient(135deg, #ff8c00, #ff6b35);
     color: white;
     border: none;
     border-radius: 8px;
@@ -381,7 +381,7 @@ body {
 
 .card-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 5px 15px rgba(255, 140, 0, 0.3);
 }
 
 /* Quick Actions */
@@ -409,7 +409,7 @@ body {
 }
 
 .action-btn {
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    background: linear-gradient(135deg, #ff8c00, #ff6b35);
     color: white;
     border: none;
     padding: 15px 20px;
@@ -426,7 +426,7 @@ body {
 
 .action-btn:hover {
     transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 8px 25px rgba(255, 140, 0, 0.3);
 }
 
 .action-btn i {
@@ -454,7 +454,7 @@ body {
 .footer-section h4 {
     font-size: 1.2rem;
     margin-bottom: 20px;
-    color: #667eea;
+    color: #ff8c00;
 }
 
 .footer-section p {
@@ -479,7 +479,7 @@ body {
 
 .footer-section ul li a:hover {
     opacity: 1;
-    color: #667eea;
+    color: #ff8c00;
 }
 
 .social-links {
@@ -492,7 +492,7 @@ body {
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background: #667eea;
+    background: #ff8c00;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -502,7 +502,7 @@ body {
 }
 
 .social-links a:hover {
-    background: #764ba2;
+    background: #ff6b35;
     transform: translateY(-2px);
 }
 
@@ -608,7 +608,7 @@ body {
     border-radius: 16px;
     margin: 32px 0;
     overflow: hidden;
-    box-shadow: 0 8px 32px rgba(102, 126, 234, 0.1);
+    box-shadow: 0 8px 32px rgba(255, 140, 0, 0.1);
     display: none;
     /* Removed all transitions and animations to prevent flickering */
 }
@@ -622,7 +622,7 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 20px 24px;
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    background: linear-gradient(135deg, #ff8c00, #ff6b35);
     color: white;
 }
 
@@ -667,7 +667,7 @@ body {
     width: 48px;
     height: 48px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    background: linear-gradient(135deg, #ff8c00, #ff6b35);
     color: white;
     display: flex;
     align-items: center;
@@ -709,8 +709,8 @@ body {
 
 .option-btn:hover {
     background: #f8f9fa;
-    color: #667eea;
-    border-color: #667eea;
+    color: #ff8c00;
+    border-color: #ff8c00;
 }
 
 #memberChatMessages {
@@ -728,7 +728,7 @@ body {
 
 .chat-welcome i {
     font-size: 3.5rem;
-    color: #667eea;
+    color: #ff8c00;
     margin-bottom: 20px;
     display: block;
 }
@@ -778,15 +778,15 @@ body {
 }
 
 .quick-question-btn:hover {
-    background: #667eea;
+    background: #ff8c00;
     color: white;
-    border-color: #667eea;
+    border-color: #ff8c00;
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+    box-shadow: 0 4px 12px rgba(255, 140, 0, 0.2);
 }
 
 .quick-question-btn i {
-    color: #667eea;
+    color: #ff8c00;
     font-size: 0.9rem;
 }
 
@@ -817,7 +817,7 @@ body {
 .typing-dots span {
     width: 4px;
     height: 4px;
-    background: #667eea;
+    background: #ff8c00;
     border-radius: 50%;
     animation: pulse 1.4s infinite ease-in-out;
 }
@@ -850,8 +850,8 @@ body {
 
 #memberMessageInput:focus {
     outline: none;
-    border-color: #667eea;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    border-color: #ff8c00;
+    box-shadow: 0 0 0 3px rgba(255, 140, 0, 0.1);
 }
 
 .input-actions {
@@ -866,7 +866,7 @@ body {
 }
 
 .send-message-btn {
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    background: linear-gradient(135deg, #ff8c00, #ff6b35);
     color: white;
     border: none;
     border-radius: 10px;
@@ -882,7 +882,7 @@ body {
 
 .send-message-btn:hover:not(:disabled) {
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 4px 12px rgba(255, 140, 0, 0.3);
 }
 
 .send-message-btn:disabled {
@@ -913,10 +913,10 @@ body {
 }
 
 .member-message.received .member-message-bubble {
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    background: linear-gradient(135deg, #ff8c00, #ff6b35);
     color: white;
     border-bottom-left-radius: 4px;
-    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+    box-shadow: 0 2px 8px rgba(255, 140, 0, 0.2);
 }
 
 .member-message.sent .member-message-bubble {
